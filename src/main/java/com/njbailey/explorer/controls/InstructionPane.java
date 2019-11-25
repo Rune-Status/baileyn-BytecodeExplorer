@@ -5,13 +5,17 @@ import com.njbailey.bytelib.Method;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 
 import java.io.IOException;
 
 public class InstructionPane extends VBox {
     private InstructionPaneController controller;
 
-    public InstructionPane() {
+    @Getter
+    private Method method;
+
+    public InstructionPane(Method method) {
         controller = new InstructionPaneController();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/InstructionPane.fxml"));
@@ -23,6 +27,8 @@ public class InstructionPane extends VBox {
         } catch(IOException e) {
             throw new RuntimeException(e);
         }
+
+        setMethod(method);
     }
 
     @Override
@@ -30,7 +36,8 @@ public class InstructionPane extends VBox {
         return getClass().getResource("/InstructionPane.css").toExternalForm();
     }
 
-    public void setApplication(Method method) {
+    public void setMethod(Method method) {
+        this.method = method;
         controller.updateInstructions(method);
     }
 }
