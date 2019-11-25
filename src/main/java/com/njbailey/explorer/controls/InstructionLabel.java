@@ -3,6 +3,7 @@ package com.njbailey.explorer.controls;
 import com.njbailey.bytelib.code.Instruction;
 import com.njbailey.bytelib.code.LabelInstruction;
 import com.njbailey.explorer.Opcodes;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.css.PseudoClass;
@@ -10,9 +11,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
-public class InstructionLabel extends StackPane {
+public class InstructionLabel extends HBox {
     private static PseudoClass LABEL_PSEUDO_CLASS = PseudoClass.getPseudoClass("label");
     private static PseudoClass UNKNOWN_PSEDUO_CLASS = PseudoClass.getPseudoClass("unknown");
 
@@ -80,13 +82,37 @@ public class InstructionLabel extends StackPane {
                 getChildren().clear();
 
                 TextField textField = new TextField(labelInstruction.getName());
+                Platform.runLater(textField::requestFocus);
                 getChildren().add(textField);
 
                 textField.setOnAction(ev -> {
-                    getChildren().clear();
-                    labelInstruction.setName(textField.getText());
-                    lblText.setText(labelInstruction.getName() + ":");
-                    getChildren().add(lblText);
+                    String text = textField.getText();
+                    if(text.equalsIgnoreCase(labelInstruction.getName()) || labelInstruction.getParent().isLabelAvailable(text)) {
+                        InstructionLabel.this.getChildren().clear();
+                        labelInstruction.setName(text);
+                        lblText.setText(text + ":");
+                        InstructionLabel.this.getChildren().add(lblText);
+                    } else {
+                        if(getChildren().size() == 1) {
+                            Label errorLabel = new Label("Label name already exists.");
+                            errorLabel.getStyleClass().add("error-label");
+                            InstructionLabel.this.getChildren().add(errorLabel);
+                        }
+                    }
+                });
+
+                textField.focusedProperty().addListener((b, oldValue, newValue) -> {
+                    if(!newValue) {
+                        InstructionLabel.this.getChildren().clear();
+
+                        String text = textField.getText();
+                        if(text.equalsIgnoreCase(labelInstruction.getName()) || labelInstruction.getParent().isLabelAvailable(text)) {
+                            labelInstruction.setName(text);
+                            lblText.setText(text + ":");
+                        }
+
+                        InstructionLabel.this.getChildren().add(lblText);
+                    }
                 });
             });
         } else if (instruction.getOpcode() < 0 || instruction.getOpcode() > 255) {
