@@ -5,8 +5,6 @@ import com.njbailey.bytelib.code.Instruction;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 
-import java.util.Optional;
-
 public class InstructionPaneController {
     @FXML
     private VBox instructions;

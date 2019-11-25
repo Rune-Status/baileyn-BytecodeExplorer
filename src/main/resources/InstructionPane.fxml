@@ -2,12 +2,12 @@
 
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         prefHeight="400.0" prefWidth="600.0">
-    <ScrollPane>
-        <VBox fx:id="instructions"/>
+         prefHeight="Infinity" prefWidth="Infinity"
+         maxWidth="Infinity" maxHeight="Infinity">
+    <ScrollPane maxWidth="Infinity" maxHeight="Infinity" style="-fx-background-color: blue;">
+        <VBox fx:id="instructions" maxWidth="Infinity" maxHeight="Infinity"/>
     </ScrollPane>
 </fx:root>

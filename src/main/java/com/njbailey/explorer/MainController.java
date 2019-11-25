@@ -126,6 +126,10 @@ public class MainController implements Initializable {
                 methodItems.getChildren().add(methodItem);
             }
 
+            if(classFile.isExecutable()) {
+                classItem.setGraphic(new Label("E"));
+            }
+
             classItem.getChildren().addAll(fieldItems, methodItems);
             item.getChildren().add(classItem);
         }
