@@ -77,6 +77,7 @@ public class InstructionLabel extends HBox {
             label.set(true);
 
             // Only label instructions can be double clicked for now.
+            // TODO: All of this feels a little hacky.
             setOnMouseClicked(e -> {
                 LabelInstruction labelInstruction = (LabelInstruction) instruction;
                 getChildren().clear();
