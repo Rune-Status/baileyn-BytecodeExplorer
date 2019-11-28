@@ -32,7 +32,6 @@
     <center>
         <SplitPane>
             <TreeView fx:id="applicationTree" SplitPane.resizableWithParent="false"/>
-
             <TabPane fx:id="methodTabs"/>
         </SplitPane>
     </center>

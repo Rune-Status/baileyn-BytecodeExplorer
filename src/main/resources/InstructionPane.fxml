@@ -5,9 +5,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         prefHeight="Infinity" prefWidth="Infinity"
          maxWidth="Infinity" maxHeight="Infinity">
-    <ScrollPane maxWidth="Infinity" maxHeight="Infinity" style="-fx-background-color: blue;">
-        <VBox fx:id="instructions" maxWidth="Infinity" maxHeight="Infinity"/>
+    <ScrollPane fitToHeight="true" fitToWidth="true">
+        <VBox fx:id="instructions"/>
     </ScrollPane>
 </fx:root>
