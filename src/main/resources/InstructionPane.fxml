@@ -7,6 +7,6 @@
          xmlns:fx="http://javafx.com/fxml"
          maxWidth="Infinity" maxHeight="Infinity">
     <ScrollPane fitToHeight="true" fitToWidth="true">
-        <VBox fx:id="instructions"/>
+        <VBox fx:id="instructions" alignment="CENTER_LEFT"/>
     </ScrollPane>
 </fx:root>
