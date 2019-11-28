@@ -13,8 +13,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
 
-import java.util.Optional;
-
 public class InstructionPane extends ScrollPane {
     @Getter
     private Method method;
