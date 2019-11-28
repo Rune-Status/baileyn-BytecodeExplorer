@@ -5,6 +5,7 @@ import com.njbailey.bytelib.Field;
 import com.njbailey.bytelib.JavaApplication;
 import com.njbailey.bytelib.Method;
 import com.njbailey.explorer.controls.InstructionPane;
+import com.njbailey.explorer.tree.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,9 +30,9 @@ public class MainController implements Initializable {
     private TabPane methodTabs;
 
     @FXML
-    private TreeView<ItemWrapper> applicationTree;
+    private TreeView<String> applicationTree;
 
-    private TreeItem<ItemWrapper> rootItem = new TreeItem<>();
+    private TreeItem<String> rootItem = new TreeItem<>();
 
     public void loadApplication(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
@@ -78,12 +79,13 @@ public class MainController implements Initializable {
         }
 
         applicationTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        applicationTree.setCellFactory(e -> new TreeCellImpl());
         applicationTree.setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getClickCount() == 2) {
-                Object selectedValue = applicationTree.getSelectionModel().getSelectedItem().getValue().getValue();
+                Object selectedValue = applicationTree.getSelectionModel().getSelectedItem();
 
-                if(selectedValue instanceof Method) {
-                    selectOrAddMethod((Method) selectedValue);
+                if(selectedValue instanceof MethodTreeItem) {
+                    selectOrAddMethod(((MethodTreeItem) selectedValue).getData());
                 }
             }
         });
@@ -110,53 +112,22 @@ public class MainController implements Initializable {
         methodTabs.getSelectionModel().select(tab);
     }
 
-    @SuppressWarnings("unchecked")
     private void updateApplication(JavaApplication application) {
-        TreeItem<ItemWrapper> item = new TreeItem<>(new ItemWrapper(application));
+        JavaApplicationTreeItem applicationTreeItem = new JavaApplicationTreeItem(application);
         for(ClassFile classFile : application.getClasses()) {
-            TreeItem<ItemWrapper> classItem = new TreeItem<>(new ItemWrapper(classFile));
+            SimpleTreeItem<String> fieldItems = new SimpleTreeItem<>("Fields");
+            classFile.getFields().forEach(field -> fieldItems.getChildren().add(new FieldTreeItem(field)));
 
-            TreeItem<ItemWrapper> fieldItems = new TreeItem<>(new ItemWrapper("Fields"));
-            for(Field field : classFile.getFields()) {
-                TreeItem<ItemWrapper> fieldItem = new TreeItem<>(new ItemWrapper(field));
-                fieldItems.getChildren().add(fieldItem);
-            }
+            SimpleTreeItem<String> methodItems = new SimpleTreeItem<>("Methods");
+            classFile.getMethods().forEach(method -> methodItems.getChildren().add(new MethodTreeItem(method)));
 
-            TreeItem<ItemWrapper> methodItems = new TreeItem<>(new ItemWrapper("Methods"));
-            for(Method method : classFile.getMethods()) {
-                TreeItem<ItemWrapper> methodItem = new TreeItem<>(new ItemWrapper(method));
-                methodItems.getChildren().add(methodItem);
-            }
+            ClassFileTreeItem classFileTreeItem = new ClassFileTreeItem(classFile);
+            classFileTreeItem.getChildren().add(fieldItems);
+            classFileTreeItem.getChildren().add(methodItems);
 
-            if(classFile.isExecutable()) {
-                classItem.setGraphic(new Label("E"));
-            }
-
-            classItem.getChildren().addAll(fieldItems, methodItems);
-            item.getChildren().add(classItem);
+            applicationTreeItem.getChildren().add(classFileTreeItem);
         }
 
-        rootItem.getChildren().add(item);
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    static class ItemWrapper {
-        private final Object value;
-
-        @Override
-        public String toString() {
-            if(value instanceof JavaApplication) {
-                return ((JavaApplication) value).getName();
-            } else if(value instanceof  Method) {
-                return ((Method) value).getName();
-            } else if(value instanceof Field) {
-                return ((Field) value).getName();
-            } else if(value instanceof ClassFile) {
-                return ((ClassFile) value).getName();
-            }
-
-            return value.toString();
-        }
+        rootItem.getChildren().add(applicationTreeItem);
     }
 }

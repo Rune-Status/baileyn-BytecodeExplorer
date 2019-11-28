@@ -6,6 +6,7 @@ import com.njbailey.bytelib.code.FrameInstruction;
 import com.njbailey.bytelib.code.Instruction;
 import com.njbailey.bytelib.code.LabelInstruction;
 import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
@@ -53,8 +54,8 @@ public class InstructionPane extends ScrollPane {
                 instructionNode.getStyleClass().add("pepper");
             }
 
-            if(instructionNode instanceof Label) {
-                ((Label) instructionNode).prefWidthProperty().bind(instructions.widthProperty());
+            if(instructionNode instanceof Control) {
+                ((Control) instructionNode).prefWidthProperty().bind(instructions.widthProperty());
             }
             instructions.getChildren().add(instructionNode);
             salt = !salt;
