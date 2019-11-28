@@ -1,7 +1,7 @@
 package com.njbailey.explorer;
 
-public final class Opcodes {
-    public static String[] OPCODE_NAMES = {
+public final class OpcodeInfo {
+    public static final String[] OPCODE_NAMES = {
             "nop",
             "acount_null",
             "iconst_m1",
@@ -260,7 +260,7 @@ public final class Opcodes {
             "impdep2",
     };
 
-    public static String[] OPCODE_DESCRIPTIONS = {
+    public static final String[] OPCODE_DESCRIPTIONS = {
             "Performs no operation.",
             "Push a null reference onto the stack.",
             "Load the int value -1 onto the stack.",
@@ -519,5 +519,5 @@ public final class Opcodes {
             "Reserved for implementation-dependent operations within debuggers; should not appear in any class file.",
     };
 
-    private Opcodes() {}
+    private OpcodeInfo() {}
 }

@@ -2,32 +2,24 @@
 
 <?import javafx.scene.layout.*?>
 
-<?import com.njbailey.explorer.controls.InstructionPane?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TabPane?>
-<?import com.njbailey.explorer.controls.EditableLabel?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.njbailey.explorer.MainController"
             prefWidth="500">
     <top>
         <MenuBar>
-            <menus>
-                <Menu text="File">
-                    <items>
-                        <Menu text="Open">
-                            <items>
-                                <MenuItem text="Application" onAction="#loadApplication"/>
-                                <MenuItem text="Directory" onAction="#loadDirectory"/>
-                            </items>
-                        </Menu>
-                    </items>
+            <Menu text="File">
+                <Menu text="Open">
+                    <MenuItem text="Application" onAction="#loadApplication"/>
+                    <MenuItem text="Directory" onAction="#loadDirectory"/>
                 </Menu>
-            </menus>
+            </Menu>
         </MenuBar>
     </top>
     <center>

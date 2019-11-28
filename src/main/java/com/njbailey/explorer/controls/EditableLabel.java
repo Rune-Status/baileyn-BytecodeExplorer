@@ -1,30 +1,17 @@
 package com.njbailey.explorer.controls;
 
-import com.njbailey.bytelib.code.Instruction;
-import com.njbailey.bytelib.code.LabelInstruction;
-import com.njbailey.explorer.Opcodes;
-import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.css.PseudoClass;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import lombok.Getter;
+import javafx.scene.layout.VBox;
 import lombok.Setter;
 
-import java.io.IOException;
-
-public class EditableLabel extends StackPane {
+public class EditableLabel extends VBox {
     private StringProperty text = new SimpleStringProperty();
     private Label label = new Label();
     private TextField textField = new TextField();
+    private String previousText = "";
+    private boolean savedFromAction = false;
 
     @Setter
     private Runnable onEditted = null;
@@ -42,6 +29,7 @@ public class EditableLabel extends StackPane {
 
         label.setOnMouseClicked(e -> {
             if(e.getClickCount() == 2) {
+                previousText = getText();
                 getChildren().clear();
                 getChildren().add(textField);
                 textField.requestFocus();
@@ -49,13 +37,16 @@ public class EditableLabel extends StackPane {
         });
 
         textField.setOnAction(e -> {
+            savedFromAction = true;
             finishEditting();
         });
 
         textField.focusedProperty().addListener((e, oldValue, newValue) -> {
-            if(!newValue) {
+            if(!newValue && !savedFromAction) {
                 finishEditting();
             }
+
+            savedFromAction = false;
         });
     }
 
@@ -80,6 +71,9 @@ public class EditableLabel extends StackPane {
     private void finishEditting() {
         getChildren().clear();
         getChildren().add(label);
-        editted();
+
+        if(!previousText.equals(getText())) {
+            editted();
+        }
     }
 }

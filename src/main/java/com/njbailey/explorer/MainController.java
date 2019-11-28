@@ -87,6 +87,7 @@ public class MainController implements Initializable {
                 }
             }
         });
+
         applicationTree.setRoot(rootItem);
         applicationTree.setShowRoot(false);
         updateApplication(javaApplication);
