@@ -69,13 +69,6 @@ public class InstructionPane extends ScrollPane {
             System.out.println("Finished editting label.");
         });
 
-        Label lineNumberLabel = new Label();
-        lineNumberLabel.getStyleClass().add("line-number-label");
-
-        Optional<Integer> lineNumber = method.getLineNumbers().get(instruction);
-
-        lineNumber.ifPresent(integer -> lineNumberLabel.setText(integer.toString()));
-
         return editableLabel;
     }
 
