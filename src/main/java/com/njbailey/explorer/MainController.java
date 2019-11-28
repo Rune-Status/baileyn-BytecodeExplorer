@@ -110,6 +110,7 @@ public class MainController implements Initializable {
         methodTabs.getSelectionModel().select(tab);
     }
 
+    @SuppressWarnings("unchecked")
     private void updateApplication(JavaApplication application) {
         TreeItem<ItemWrapper> item = new TreeItem<>(new ItemWrapper(application));
         for(ClassFile classFile : application.getClasses()) {

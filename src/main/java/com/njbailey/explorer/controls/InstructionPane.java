@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
 
@@ -19,19 +18,15 @@ public class InstructionPane extends ScrollPane {
     @Getter
     private Method method;
 
-    private VBox lineNumbers = new VBox();
     private VBox instructions = new VBox();
 
     public InstructionPane(Method method) {
         setFitToWidth(true);
         setFitToHeight(true);
 
-        lineNumbers.getStyleClass().add("line-numbers");
         instructions.getStyleClass().add("instructions");
 
-        HBox contents = new HBox();
-        contents.getChildren().addAll(lineNumbers, instructions);
-        setContent(contents);
+        setContent(instructions);
 
         setMethod(method);
     }
@@ -39,26 +34,40 @@ public class InstructionPane extends ScrollPane {
     private void setMethod(Method method) {
         this.method = method;
 
+        boolean salt = true;
         for(Instruction instruction : method.getInstructions()) {
-            Node node;
+            Node instructionNode;
+
             if(instruction instanceof LabelInstruction) {
-                addLabelInstruction((LabelInstruction) instruction);
+                instructionNode = getLabelInstruction((LabelInstruction) instruction);
             } else if(instruction instanceof FrameInstruction) {
-                addFrameInstruction((FrameInstruction) instruction);
+                instructionNode = getFrameInstruction((FrameInstruction) instruction);
             } else {
-                addInstruction(instruction);
+                instructionNode = getInstruction(instruction);
             }
+
+            instructionNode.getStyleClass().add("instruction");
+            if(salt) {
+                instructionNode.getStyleClass().add("salt");
+            } else {
+                instructionNode.getStyleClass().add("pepper");
+            }
+
+            if(instructionNode instanceof Label) {
+                ((Label) instructionNode).prefWidthProperty().bind(instructions.widthProperty());
+            }
+            instructions.getChildren().add(instructionNode);
+            salt = !salt;
         }
     }
 
-    private void addLabelInstruction(LabelInstruction instruction) {
+    private Node getLabelInstruction(LabelInstruction instruction) {
         EditableLabel editableLabel = new EditableLabel(instruction.getName());
 
         editableLabel.setOnEditted(() -> {
             System.out.println("Finished editting label.");
         });
 
-        HBox hbox = new HBox();
         Label lineNumberLabel = new Label();
         lineNumberLabel.getStyleClass().add("line-number-label");
 
@@ -66,24 +75,21 @@ public class InstructionPane extends ScrollPane {
 
         lineNumber.ifPresent(integer -> lineNumberLabel.setText(integer.toString()));
 
-        lineNumbers.getChildren().add(lineNumberLabel);
-        instructions.getChildren().add(editableLabel);
+        return editableLabel;
     }
 
-    private void addFrameInstruction(FrameInstruction instruction) {
+    private Node getFrameInstruction(FrameInstruction instruction) {
         Label label = new Label(instruction.toString());
-        label.setStyle("-fx-background-color: #FFC0C0");
+        label.getStyleClass().add("instruction-error");
 
-        lineNumbers.getChildren().add(new Label());
-        instructions.getChildren().add(label);
+        return label;
     }
 
-    private void addInstruction(Instruction instruction) {
+    private Node getInstruction(Instruction instruction) {
         Label label = new Label(instruction.toString());
         label.getStyleClass().add("indent");
         label.setTooltip(new Tooltip(OpcodeInfo.OPCODE_DESCRIPTIONS[instruction.getOpcode()]));
 
-        lineNumbers.getChildren().add(new Label());
-        instructions.getChildren().add(label);
+        return label;
     }
 }
