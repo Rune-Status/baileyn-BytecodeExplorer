@@ -29,6 +29,7 @@ package org.objectweb.asm.tree;
 
 import java.util.Map;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 /**
  * A node that represents a local variable instruction. A local variable instruction is an
@@ -82,6 +83,11 @@ public class VarInsnNode extends AbstractInsnNode {
 
   @Override
   public String toString() {
-    return super.toString() + " " + index;
+    if(parent.localVariables.size() > var) {
+      LocalVariableNode localVariableNode = parent.localVariables.get(var);
+      return super.toString() + " " + Type.getType(localVariableNode.desc).getClassName() + " " + localVariableNode.name;
+    } else {
+      return super.toString() + " " + var;
+    }
   }
 }

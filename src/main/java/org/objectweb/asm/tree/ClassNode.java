@@ -268,7 +268,7 @@ public class ClassNode extends ClassVisitor {
       final String descriptor,
       final String signature,
       final String[] exceptions) {
-    MethodNode method = new MethodNode(access, name, descriptor, signature, exceptions);
+    MethodNode method = new MethodNode(this, access, name, descriptor, signature, exceptions);
     methods.add(method);
     return method;
   }

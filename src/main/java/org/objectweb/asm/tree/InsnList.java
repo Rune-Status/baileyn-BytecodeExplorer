@@ -481,9 +481,9 @@ public class InsnList implements Iterable<AbstractInsnNode> {
       if(node instanceof MethodInsnNode) {
         MethodInsnNode methodInsnNode = (MethodInsnNode) node;
 
-        if(methodInsnNode.name.equals(toRename.name)) {
-          if(methodInsnNode.desc.equals(toRename.desc)) {
-            if(methodInsnNode.owner.equals(toRename.parent.name)) {
+        if(methodInsnNode.name.equals(toRename.getName())) {
+          if(methodInsnNode.desc.equals(toRename.getDesc())) {
+            if(methodInsnNode.owner.equals(toRename.getParent().getName())) {
               methodInsnNode.name = newName;
             }
           }
@@ -497,9 +497,9 @@ public class InsnList implements Iterable<AbstractInsnNode> {
       if(node instanceof FieldInsnNode) {
         FieldInsnNode fieldInsnNode = (FieldInsnNode) node;
 
-        if(fieldInsnNode.name.equals(toRename.name)) {
-          if(fieldInsnNode.desc.equals(toRename.desc)) {
-            if(fieldInsnNode.owner.equals(toRename.parent.name)) {
+        if(fieldInsnNode.name.equals(toRename.getName())) {
+          if(fieldInsnNode.desc.equals(toRename.getDesc())) {
+            if(fieldInsnNode.owner.equals(toRename.getParent().getName())) {
               fieldInsnNode.name = newName;
             }
           }

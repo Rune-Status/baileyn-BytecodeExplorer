@@ -54,19 +54,19 @@ public class MethodNode extends MethodVisitor {
    * The method's access flags (see {@link Opcodes}). This field also indicates if the method is
    * synthetic and/or deprecated.
    */
-  public int access;
+  private int access;
 
   /** The method's name. */
-  public String name;
+  private String name;
 
   /** The method's descriptor (see {@link Type}). */
-  public String desc;
+  private String desc;
 
   /** The method's signature. May be {@literal null}. */
-  public String signature;
+  private String signature;
 
   /** The internal names of the method's exception classes (see {@link Type#getInternalName()}). */
-  public List<String> exceptions;
+  private List<String> exceptions;
 
   /** The method parameter info (access flags and name). */
   public List<ParameterNode> parameters;
@@ -93,7 +93,7 @@ public class MethodNode extends MethodVisitor {
    * enumeration values), a {@link AnnotationNode}, or a {@link List} of values of one of the
    * preceding types. May be {@literal null}.
    */
-  public Object annotationDefault;
+  private Object annotationDefault;
 
   /**
    * The number of method parameters than can have runtime visible annotations. This number must be
@@ -103,7 +103,7 @@ public class MethodNode extends MethodVisitor {
    * ignored when computing parameter indices for the purpose of parameter annotations (see
    * https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.18).
    */
-  public int visibleAnnotableParameterCount;
+  private int visibleAnnotableParameterCount;
 
   /**
    * The runtime visible parameter annotations of this method. These lists are lists of {@link
@@ -119,7 +119,7 @@ public class MethodNode extends MethodVisitor {
    * ignored when computing parameter indices for the purpose of parameter annotations (see
    * https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.18).
    */
-  public int invisibleAnnotableParameterCount;
+  private int invisibleAnnotableParameterCount;
 
   /**
    * The runtime invisible parameter annotations of this method. These lists are lists of {@link
@@ -134,10 +134,10 @@ public class MethodNode extends MethodVisitor {
   public List<TryCatchBlockNode> tryCatchBlocks;
 
   /** The maximum stack size of this method. */
-  public int maxStack;
+  private int maxStack;
 
   /** The maximum number of local variables of this method. */
-  public int maxLocals;
+  private int maxLocals;
 
   /** The local variables of this method. May be {@literal null} */
   public List<LocalVariableNode> localVariables;
@@ -147,7 +147,7 @@ public class MethodNode extends MethodVisitor {
 
   /** The invisible local variable annotations of this method. May be {@literal null} */
   public List<LocalVariableAnnotationNode> invisibleLocalVariableAnnotations;
-  public ClassNode parent;
+  private ClassNode parent;
 
   /** Whether the accept method has been called on this object. */
   private boolean visited;
@@ -179,7 +179,7 @@ public class MethodNode extends MethodVisitor {
 
   /**
    * Constructs a new {@link MethodNode}. <i>Subclasses must not use this constructor</i>. Instead,
-   * they must use the {@link #MethodNode(int, int, String, String, String, String[])} version.
+   * they must use the {@link #MethodNode(int, ClassNode, int, String, String, String, String[])} version.
    *
    * @param access the method's access flags (see {@link Opcodes}). This parameter also indicates if
    *     the method is synthetic and/or deprecated.
@@ -191,12 +191,13 @@ public class MethodNode extends MethodVisitor {
    * @throws IllegalStateException If a subclass calls this constructor.
    */
   public MethodNode(
+      final ClassNode parent,
       final int access,
       final String name,
       final String descriptor,
       final String signature,
       final String[] exceptions) {
-    this(/* latest api = */ Opcodes.ASM7, access, name, descriptor, signature, exceptions);
+    this(/* latest api = */ Opcodes.ASM7, parent, access, name, descriptor, signature, exceptions);
     if (getClass() != MethodNode.class) {
       throw new IllegalStateException();
     }
@@ -217,12 +218,14 @@ public class MethodNode extends MethodVisitor {
    */
   public MethodNode(
       final int api,
+      final ClassNode parent,
       final int access,
       final String name,
       final String descriptor,
       final String signature,
       final String[] exceptions) {
     super(api);
+    this.parent = parent;
     this.access = access;
     this.name = name;
     this.desc = descriptor;
@@ -774,6 +777,11 @@ public class MethodNode extends MethodVisitor {
       visited = true;
     }
     methodVisitor.visitEnd();
+  }
+
+  public void setName(String newName) {
+    parent.getApplication().renameMethodReferences(this, newName);
+    this.name = newName;
   }
 
   public void renameReferences(MethodNode toRename, String newName) {
