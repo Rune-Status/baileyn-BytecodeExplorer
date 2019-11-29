@@ -508,6 +508,24 @@ public class InsnList implements Iterable<AbstractInsnNode> {
     }
   }
 
+  public void renameReferences(ClassNode toRename, String newName) {
+    for(AbstractInsnNode node : this) {
+      if(node instanceof FieldInsnNode) {
+        FieldInsnNode fieldInsnNode = (FieldInsnNode) node;
+
+        if(fieldInsnNode.getOwner().equals(toRename.getName())) {
+          fieldInsnNode.setOwner(newName);
+        }
+      } else if(node instanceof MethodInsnNode) {
+        MethodInsnNode methodInsnNode = (MethodInsnNode) node;
+
+        if(methodInsnNode.getOwner().equals(toRename.getName())) {
+          methodInsnNode.setOwner(newName);
+        }
+      }
+    }
+  }
+
     // Note: this class is not generified because it would create bridges.
   @SuppressWarnings("rawtypes")
   private final class InsnListIterator implements ListIterator {

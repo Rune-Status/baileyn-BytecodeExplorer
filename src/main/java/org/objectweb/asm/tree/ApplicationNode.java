@@ -86,6 +86,23 @@ public class ApplicationNode {
         }
     }
 
+    public void renameClassReferences(ClassNode toRename, String newName) {
+        for(ClassNode classNode : classes) {
+            if(classNode.getInterfaces().contains(toRename.name)) {
+                classNode.getInterfaces().remove(toRename.name);
+                classNode.getInterfaces().add(newName);
+            }
+
+            if(classNode.getSuperName().equals(toRename.getName())) {
+                classNode.setSuperName(newName);
+            }
+
+            for(MethodNode method : classNode.methods) {
+                method.renameReferences(toRename, newName);
+            }
+        }
+    }
+
     private void loadClassesFromDirectory(Path dir) throws IOException {
         if(!Files.isDirectory(dir)) {
             throw new RuntimeException("Argument wasn't a directory.");

@@ -792,6 +792,11 @@ public class MethodNode extends MethodVisitor {
     instructions.renameReferences(toRename, newName);
   }
 
+
+  public void renameReferences(ClassNode toRename, String newName) {
+    instructions.renameReferences(toRename, newName);
+  }
+
   @Override
   public boolean equals(Object obj) {
     if(obj instanceof MethodNode) {

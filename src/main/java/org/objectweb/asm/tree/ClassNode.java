@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
@@ -46,6 +47,7 @@ import org.objectweb.asm.TypePath;
  * @author Eric Bruneton
  */
 @Getter
+@Setter
 public class ClassNode extends ClassVisitor {
 
   /**
@@ -414,5 +416,10 @@ public class ClassNode extends ClassVisitor {
       methods.get(i).accept(classVisitor);
     }
     classVisitor.visitEnd();
+  }
+
+  public void setName(String newName) {
+    getApplication().renameClassReferences(this, newName);
+    this.name = newName;
   }
 }

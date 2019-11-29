@@ -29,6 +29,8 @@ package org.objectweb.asm.tree;
 
 import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
@@ -38,6 +40,8 @@ import org.objectweb.asm.Type;
  *
  * @author Eric Bruneton
  */
+@Getter
+@Setter
 public class FieldInsnNode extends AbstractInsnNode {
 
   /**
