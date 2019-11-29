@@ -1,14 +1,14 @@
 package com.njbailey.explorer.tree;
 
-import com.njbailey.bytelib.Method;
 import com.njbailey.explorer.controls.MethodInfo;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import org.objectweb.asm.tree.MethodNode;
 
-public class MethodTreeItem extends SimpleTreeItem<Method> {
-    public MethodTreeItem(Method method) {
+public class MethodTreeItem extends SimpleTreeItem<MethodNode> {
+    public MethodTreeItem(MethodNode method) {
         super(method);
         setValue(method.getName());
     }

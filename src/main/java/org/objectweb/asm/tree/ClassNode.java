@@ -29,6 +29,8 @@ package org.objectweb.asm.tree;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.Getter;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
@@ -36,7 +38,6 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.ModuleVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.RecordComponentVisitor;
 import org.objectweb.asm.TypePath;
 
 /**
@@ -44,6 +45,7 @@ import org.objectweb.asm.TypePath;
  *
  * @author Eric Bruneton
  */
+@Getter
 public class ClassNode extends ClassVisitor {
 
   /**
@@ -127,36 +129,22 @@ public class ClassNode extends ClassVisitor {
   /** The internal names of the nest members of this class. May be {@literal null}. */
   public List<String> nestMembers;
 
-  /**
-   * <b>Experimental, use at your own risk. This method will be renamed when it becomes stable, this
-   * will break existing code using it</b>. The internal names of the permitted subtypes of this
-   * class. May be {@literal null}.
-   *
-   * @deprecated this API is experimental.
-   */
-  @Deprecated public List<String> permittedSubtypesExperimental;
-
-  /**
-   * The record components of this class. May be {@literal null}.
-   *
-   * @deprecated this API is experimental.
-   */
-  @Deprecated public List<RecordComponentNode> recordComponentsExperimental;
-
   /** The fields of this class. */
   public List<FieldNode> fields;
 
   /** The methods of this class. */
   public List<MethodNode> methods;
 
+  public ApplicationNode application;
+
   /**
    * Constructs a new {@link ClassNode}. <i>Subclasses must not use this constructor</i>. Instead,
-   * they must use the {@link #ClassNode(int)} version.
+   * they must use the {@link #ClassNode(int, ApplicationNode)} version.
    *
    * @throws IllegalStateException If a subclass calls this constructor.
    */
-  public ClassNode() {
-    this(Opcodes.ASM7);
+  public ClassNode(final ApplicationNode application) {
+    this(Opcodes.ASM7, application);
     if (getClass() != ClassNode.class) {
       throw new IllegalStateException();
     }
@@ -168,8 +156,9 @@ public class ClassNode extends ClassVisitor {
    * @param api the ASM API version implemented by this visitor. Must be one of {@link
    *     Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
    */
-  public ClassNode(final int api) {
+  public ClassNode(final int api, final ApplicationNode application) {
     super(api);
+    this.application = application;
     this.interfaces = new ArrayList<>();
     this.innerClasses = new ArrayList<>();
     this.fields = new ArrayList<>();
@@ -254,24 +243,10 @@ public class ClassNode extends ClassVisitor {
   }
 
   @Override
-  public void visitPermittedSubtypeExperimental(final String permittedSubtype) {
-    permittedSubtypesExperimental = Util.add(permittedSubtypesExperimental, permittedSubtype);
-  }
-
-  @Override
   public void visitInnerClass(
       final String name, final String outerName, final String innerName, final int access) {
     InnerClassNode innerClass = new InnerClassNode(name, outerName, innerName, access);
     innerClasses.add(innerClass);
-  }
-
-  @Override
-  public RecordComponentVisitor visitRecordComponentExperimental(
-      final int access, final String name, final String descriptor, final String signature) {
-    RecordComponentNode recordComponent =
-        new RecordComponentNode(access, name, descriptor, signature);
-    recordComponentsExperimental = Util.add(recordComponentsExperimental, recordComponent);
-    return recordComponent;
   }
 
   @Override
@@ -281,7 +256,7 @@ public class ClassNode extends ClassVisitor {
       final String descriptor,
       final String signature,
       final Object value) {
-    FieldNode field = new FieldNode(access, name, descriptor, signature, value);
+    FieldNode field = new FieldNode(this, access, name, descriptor, signature, value);
     fields.add(field);
     return field;
   }
@@ -316,12 +291,6 @@ public class ClassNode extends ClassVisitor {
    *     {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
    */
   public void check(final int api) {
-    if (api != Opcodes.ASM8_EXPERIMENTAL && permittedSubtypesExperimental != null) {
-      throw new UnsupportedClassVersionException();
-    }
-    if (api != Opcodes.ASM8_EXPERIMENTAL && recordComponentsExperimental != null) {
-      throw new UnsupportedClassVersionException();
-    }
     if (api < Opcodes.ASM7 && (nestHostClass != null || nestMembers != null)) {
       throw new UnsupportedClassVersionException();
     }
@@ -355,11 +324,6 @@ public class ClassNode extends ClassVisitor {
     if (invisibleTypeAnnotations != null) {
       for (int i = invisibleTypeAnnotations.size() - 1; i >= 0; --i) {
         invisibleTypeAnnotations.get(i).check(api);
-      }
-    }
-    if (recordComponentsExperimental != null) {
-      for (int i = recordComponentsExperimental.size() - 1; i >= 0; --i) {
-        recordComponentsExperimental.get(i).checkExperimental(api);
       }
     }
     for (int i = fields.size() - 1; i >= 0; --i) {
@@ -437,21 +401,9 @@ public class ClassNode extends ClassVisitor {
         classVisitor.visitNestMember(nestMembers.get(i));
       }
     }
-    // Visit the permitted subtypes.
-    if (permittedSubtypesExperimental != null) {
-      for (int i = 0, n = permittedSubtypesExperimental.size(); i < n; ++i) {
-        classVisitor.visitPermittedSubtypeExperimental(permittedSubtypesExperimental.get(i));
-      }
-    }
     // Visit the inner classes.
     for (int i = 0, n = innerClasses.size(); i < n; ++i) {
       innerClasses.get(i).accept(classVisitor);
-    }
-    // Visit the record components.
-    if (recordComponentsExperimental != null) {
-      for (int i = 0, n = recordComponentsExperimental.size(); i < n; ++i) {
-        recordComponentsExperimental.get(i).acceptExperimental(classVisitor);
-      }
     }
     // Visit the fields.
     for (int i = 0, n = fields.size(); i < n; ++i) {

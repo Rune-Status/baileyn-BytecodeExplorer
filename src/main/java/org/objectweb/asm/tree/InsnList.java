@@ -476,7 +476,39 @@ public class InsnList implements Iterable<AbstractInsnNode> {
     }
   }
 
-  // Note: this class is not generified because it would create bridges.
+  public void renameReferences(MethodNode toRename, String newName) {
+    for(AbstractInsnNode node : this) {
+      if(node instanceof MethodInsnNode) {
+        MethodInsnNode methodInsnNode = (MethodInsnNode) node;
+
+        if(methodInsnNode.name.equals(toRename.name)) {
+          if(methodInsnNode.desc.equals(toRename.desc)) {
+            if(methodInsnNode.owner.equals(toRename.parent.name)) {
+              methodInsnNode.name = newName;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public void renameReferences(FieldNode toRename, String newName) {
+    for(AbstractInsnNode node : this) {
+      if(node instanceof FieldInsnNode) {
+        FieldInsnNode fieldInsnNode = (FieldInsnNode) node;
+
+        if(fieldInsnNode.name.equals(toRename.name)) {
+          if(fieldInsnNode.desc.equals(toRename.desc)) {
+            if(fieldInsnNode.owner.equals(toRename.parent.name)) {
+              fieldInsnNode.name = newName;
+            }
+          }
+        }
+      }
+    }
+  }
+
+    // Note: this class is not generified because it would create bridges.
   @SuppressWarnings("rawtypes")
   private final class InsnListIterator implements ListIterator {
 

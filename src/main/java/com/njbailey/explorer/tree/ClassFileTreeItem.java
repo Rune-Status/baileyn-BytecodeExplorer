@@ -1,12 +1,12 @@
 package com.njbailey.explorer.tree;
 
-import com.njbailey.bytelib.ClassFile;
 import javafx.scene.control.Label;
+import org.objectweb.asm.tree.ClassNode;
 
 import java.lang.reflect.Modifier;
 
-public class ClassFileTreeItem extends SimpleTreeItem<ClassFile> {
-    public ClassFileTreeItem(ClassFile classFile) {
+public class ClassFileTreeItem extends SimpleTreeItem<ClassNode> {
+    public ClassFileTreeItem(ClassNode classFile) {
         super(classFile);
         setValue(classFile.getName());
 

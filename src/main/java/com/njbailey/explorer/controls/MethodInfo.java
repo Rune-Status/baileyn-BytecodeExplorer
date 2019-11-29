@@ -1,16 +1,16 @@
 package com.njbailey.explorer.controls;
 
-import com.njbailey.bytelib.Method;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Modifier;
 
 public class MethodInfo extends GridPane {
-    private Method method;
+    private MethodNode method;
 
-    public MethodInfo(Method method) {
+    public MethodInfo(MethodNode method) {
         this.method = method;
 
         Label nameLabel = new Label("Name:");

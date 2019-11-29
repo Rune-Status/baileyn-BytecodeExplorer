@@ -1,15 +1,15 @@
 package com.njbailey.explorer.list;
 
-import com.njbailey.bytelib.Method;
-import com.njbailey.bytelib.code.Instruction;
 import javafx.scene.control.ListView;
 import lombok.Getter;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
-public class InstructionList extends ListView<Instruction> {
+public class InstructionList extends ListView<AbstractInsnNode> {
     @Getter
-    private Method method;
+    private MethodNode method;
 
-    public InstructionList(Method method) {
+    public InstructionList(MethodNode method) {
         this();
         setMethod(method);
     }
@@ -18,10 +18,10 @@ public class InstructionList extends ListView<Instruction> {
         setCellFactory(ignored -> new InstructionListCell());
     }
 
-    public void setMethod(Method method) {
+    public void setMethod(MethodNode method) {
         this.method = method;
 
-        for(Instruction instruction : method.getInstructions()) {
+        for(AbstractInsnNode instruction : method.getInstructions()) {
             getItems().add(instruction);
         }
     }

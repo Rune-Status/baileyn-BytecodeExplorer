@@ -1,8 +1,5 @@
 package com.njbailey.explorer;
 
-import com.njbailey.bytelib.ClassFile;
-import com.njbailey.bytelib.JavaApplication;
-import com.njbailey.bytelib.Method;
 import com.njbailey.explorer.list.InstructionList;
 import com.njbailey.explorer.tree.*;
 import javafx.event.ActionEvent;
@@ -11,6 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import org.objectweb.asm.tree.ApplicationNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,12 +32,12 @@ public class MainController implements Initializable {
         final File file = chooser.showOpenDialog(methodTabs.getScene().getWindow());
 
         if(file != null) {
-            JavaApplication javaApplication = new JavaApplication();
+            ApplicationNode applicationNode = new ApplicationNode();
 
             try {
-                javaApplication.load(file.toPath());
+                applicationNode.load(file.toPath());
 
-                updateApplication(javaApplication);
+                updateApplication(applicationNode);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,12 +49,12 @@ public class MainController implements Initializable {
         final File file = chooser.showDialog(methodTabs.getScene().getWindow());
 
         if(file != null) {
-            JavaApplication javaApplication = new JavaApplication();
+            ApplicationNode applicationNode = new ApplicationNode();
 
             try {
-                javaApplication.load(file.toPath());
+                applicationNode.load(file.toPath());
 
-                updateApplication(javaApplication);
+                updateApplication(applicationNode);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -63,10 +63,10 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        JavaApplication javaApplication = new JavaApplication();
+        ApplicationNode applicationNode = new ApplicationNode();
 
         try {
-            javaApplication.load(Paths.get(".", "build", "classes", "java", "main"));
+            applicationNode.load(Paths.get(".", "build", "classes", "java", "main"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,10 +91,10 @@ public class MainController implements Initializable {
 
         applicationTree.setRoot(rootItem);
         applicationTree.setShowRoot(false);
-        updateApplication(javaApplication);
+        updateApplication(applicationNode);
     }
 
-    private void selectOrAddMethod(Method method) {
+    private void selectOrAddMethod(MethodNode method) {
         for(Tab tab : methodTabs.getTabs()) {
             if(tab.getContent() instanceof InstructionList) {
                 InstructionList instructionList = (InstructionList) tab.getContent();
@@ -111,16 +111,16 @@ public class MainController implements Initializable {
         methodTabs.getSelectionModel().select(tab);
     }
 
-    private void updateApplication(JavaApplication application) {
+    private void updateApplication(ApplicationNode application) {
         JavaApplicationTreeItem applicationTreeItem = new JavaApplicationTreeItem(application);
-        for(ClassFile classFile : application.getClasses()) {
+        for(ClassNode classNode : application.getClasses()) {
             SimpleTreeItem<String> fieldItems = new SimpleTreeItem<>("Fields");
-            classFile.getFields().forEach(field -> fieldItems.getChildren().add(new FieldTreeItem(field)));
+            classNode.getFields().forEach(field -> fieldItems.getChildren().add(new FieldTreeItem(field)));
 
             SimpleTreeItem<String> methodItems = new SimpleTreeItem<>("Methods");
-            classFile.getMethods().forEach(method -> methodItems.getChildren().add(new MethodTreeItem(method)));
+            classNode.getMethods().forEach(method -> methodItems.getChildren().add(new MethodTreeItem(method)));
 
-            ClassFileTreeItem classFileTreeItem = new ClassFileTreeItem(classFile);
+            ClassFileTreeItem classFileTreeItem = new ClassFileTreeItem(classNode);
             classFileTreeItem.getChildren().add(fieldItems);
             classFileTreeItem.getChildren().add(methodItems);
 

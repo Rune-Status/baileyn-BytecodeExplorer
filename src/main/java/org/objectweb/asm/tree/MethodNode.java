@@ -29,6 +29,8 @@ package org.objectweb.asm.tree;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.Getter;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
@@ -45,6 +47,7 @@ import org.objectweb.asm.TypePath;
  *
  * @author Eric Bruneton
  */
+@Getter
 public class MethodNode extends MethodVisitor {
 
   /**
@@ -144,18 +147,19 @@ public class MethodNode extends MethodVisitor {
 
   /** The invisible local variable annotations of this method. May be {@literal null} */
   public List<LocalVariableAnnotationNode> invisibleLocalVariableAnnotations;
+  public ClassNode parent;
 
   /** Whether the accept method has been called on this object. */
   private boolean visited;
 
   /**
    * Constructs an uninitialized {@link MethodNode}. <i>Subclasses must not use this
-   * constructor</i>. Instead, they must use the {@link #MethodNode(int)} version.
+   * constructor</i>. Instead, they must use the {@link #MethodNode(int, ClassNode)} version.
    *
    * @throws IllegalStateException If a subclass calls this constructor.
    */
-  public MethodNode() {
-    this(/* latest api = */ Opcodes.ASM7);
+  public MethodNode(ClassNode parent) {
+    this(/* latest api = */ Opcodes.ASM7, parent);
     if (getClass() != MethodNode.class) {
       throw new IllegalStateException();
     }
@@ -167,9 +171,10 @@ public class MethodNode extends MethodVisitor {
    * @param api the ASM API version implemented by this visitor. Must be one of {@link
    *     Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
    */
-  public MethodNode(final int api) {
+  public MethodNode(final int api, ClassNode parent) {
     super(api);
     this.instructions = new InsnList();
+    this.parent = parent;
   }
 
   /**
@@ -768,5 +773,13 @@ public class MethodNode extends MethodVisitor {
       visited = true;
     }
     methodVisitor.visitEnd();
+  }
+
+  public void renameReferences(MethodNode toRename, String newName) {
+    instructions.renameReferences(toRename, newName);
+  }
+
+  public void renameReferences(FieldNode toRename, String newName) {
+    instructions.renameReferences(toRename, newName);
   }
 }

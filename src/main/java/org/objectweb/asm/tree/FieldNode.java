@@ -28,6 +28,8 @@
 package org.objectweb.asm.tree;
 
 import java.util.List;
+
+import lombok.Getter;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
@@ -40,6 +42,7 @@ import org.objectweb.asm.TypePath;
  *
  * @author Eric Bruneton
  */
+@Getter
 public class FieldNode extends FieldVisitor {
 
   /**
@@ -78,10 +81,11 @@ public class FieldNode extends FieldVisitor {
 
   /** The non standard attributes of this field. * May be {@literal null}. */
   public List<Attribute> attrs;
+  public ClassNode parent;
 
-  /**
+    /**
    * Constructs a new {@link FieldNode}. <i>Subclasses must not use this constructor</i>. Instead,
-   * they must use the {@link #FieldNode(int, int, String, String, String, Object)} version.
+   * they must use the {@link #FieldNode(int, ClassNode, int, String, String, String, Object)} version.
    *
    * @param access the field's access flags (see {@link org.objectweb.asm.Opcodes}). This parameter
    *     also indicates if the field is synthetic and/or deprecated.
@@ -94,12 +98,13 @@ public class FieldNode extends FieldVisitor {
    * @throws IllegalStateException If a subclass calls this constructor.
    */
   public FieldNode(
+      final ClassNode parent,
       final int access,
       final String name,
       final String descriptor,
       final String signature,
       final Object value) {
-    this(/* latest api = */ Opcodes.ASM7, access, name, descriptor, signature, value);
+    this(/* latest api = */ Opcodes.ASM7, parent, access, name, descriptor, signature, value);
     if (getClass() != FieldNode.class) {
       throw new IllegalStateException();
     }
@@ -121,12 +126,14 @@ public class FieldNode extends FieldVisitor {
    */
   public FieldNode(
       final int api,
+      final ClassNode parent,
       final int access,
       final String name,
       final String descriptor,
       final String signature,
       final Object value) {
     super(api);
+    this.parent = parent;
     this.access = access;
     this.name = name;
     this.desc = descriptor;
