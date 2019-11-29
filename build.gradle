@@ -20,16 +20,13 @@ javafx {
 
 application {
     mainClassName = "com.njbailey.explorer.Main"
-//    mainClassName = "com.njbailey.bytelib.TestMain"
 }
 
 dependencies {
-    implementation("com.google.guava:guava:28.1-jre")
-
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
-    implementation 'com.njbailey:ByteLib'
+    implementation group: 'org.ow2.asm', name: 'asm', version: '7.2'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

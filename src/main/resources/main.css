@@ -30,3 +30,7 @@
 .pepper {
     -fx-background-color: #DADADA;
 }
+
+.selected {
+    -fx-border-color: red;
+}

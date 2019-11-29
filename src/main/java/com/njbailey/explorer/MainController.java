@@ -1,28 +1,21 @@
 package com.njbailey.explorer;
 
 import com.njbailey.bytelib.ClassFile;
-import com.njbailey.bytelib.Field;
 import com.njbailey.bytelib.JavaApplication;
 import com.njbailey.bytelib.Method;
-import com.njbailey.explorer.controls.InstructionPane;
+import com.njbailey.explorer.list.InstructionList;
 import com.njbailey.explorer.tree.*;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -78,6 +71,12 @@ public class MainController implements Initializable {
             e.printStackTrace();
         }
 
+        methodTabs.focusedProperty().addListener((e, old, n) -> {
+            if(n) {
+                methodTabs.getSelectionModel().selectedItemProperty().get().getContent().requestFocus();
+            }
+        });
+
         applicationTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         applicationTree.setCellFactory(e -> new TreeCellImpl());
         applicationTree.setOnMouseClicked(mouseEvent -> {
@@ -97,17 +96,17 @@ public class MainController implements Initializable {
 
     private void selectOrAddMethod(Method method) {
         for(Tab tab : methodTabs.getTabs()) {
-            if(tab.getContent() instanceof InstructionPane) {
-                InstructionPane instructionPane = (InstructionPane) tab.getContent();
+            if(tab.getContent() instanceof InstructionList) {
+                InstructionList instructionList = (InstructionList) tab.getContent();
 
-                if(instructionPane.getMethod().equals(method)) {
+                if(instructionList.getMethod().equals(method)) {
                     methodTabs.getSelectionModel().select(tab);
                     return;
                 }
             }
         }
 
-        Tab tab = new Tab(method.getName(), new InstructionPane(method));
+        Tab tab = new Tab(method.getName(), new InstructionList(method));
         methodTabs.getTabs().add(tab);
         methodTabs.getSelectionModel().select(tab);
     }
