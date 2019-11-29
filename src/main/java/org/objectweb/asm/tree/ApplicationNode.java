@@ -101,7 +101,7 @@ public class ApplicationNode {
     }
 
     private void loadClassesFromJar(Path path) throws IOException {
-        if(!path.getFileName().endsWith(".jar")) {
+        if(!path.toString().endsWith(".jar")) {
             throw new RuntimeException("Path wasn't a jar file.");
         }
 

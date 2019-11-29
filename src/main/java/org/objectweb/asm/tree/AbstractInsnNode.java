@@ -30,6 +30,8 @@ package org.objectweb.asm.tree;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.njbailey.explorer.OpcodeInfo;
 import org.objectweb.asm.MethodVisitor;
 
 /**
@@ -91,6 +93,8 @@ public abstract class AbstractInsnNode {
   /** The opcode of this instruction. */
   protected int opcode;
 
+  protected MethodNode parent;
+
   /**
    * The runtime visible type annotations of this instruction. This field is only used for real
    * instructions (i.e. not for labels, frames, or line number nodes). This list is a list of {@link
@@ -123,7 +127,8 @@ public abstract class AbstractInsnNode {
    *
    * @param opcode the opcode of the instruction to be constructed.
    */
-  protected AbstractInsnNode(final int opcode) {
+  protected AbstractInsnNode(MethodNode parent, final int opcode) {
+    this.parent = parent;
     this.opcode = opcode;
     this.index = -1;
   }
@@ -261,5 +266,10 @@ public abstract class AbstractInsnNode {
       }
     }
     return this;
+  }
+
+  @Override
+  public String toString() {
+    return OpcodeInfo.OPCODE_NAMES[getOpcode()].toUpperCase();
   }
 }

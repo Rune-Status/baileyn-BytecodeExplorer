@@ -30,6 +30,7 @@ package org.objectweb.asm.tree;
 import java.util.Map;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * A node that represents a method instruction. A method instruction is an instruction that invokes
@@ -67,8 +68,8 @@ public class MethodInsnNode extends AbstractInsnNode {
    * @param descriptor the method's descriptor (see {@link org.objectweb.asm.Type}).
    */
   public MethodInsnNode(
-      final int opcode, final String owner, final String name, final String descriptor) {
-    this(opcode, owner, name, descriptor, opcode == Opcodes.INVOKEINTERFACE);
+      final MethodNode parent, final int opcode, final String owner, final String name, final String descriptor) {
+    this(parent, opcode, owner, name, descriptor, opcode == Opcodes.INVOKEINTERFACE);
   }
 
   /**
@@ -83,12 +84,13 @@ public class MethodInsnNode extends AbstractInsnNode {
    * @param isInterface if the method's owner class is an interface.
    */
   public MethodInsnNode(
+      final MethodNode parent,
       final int opcode,
       final String owner,
       final String name,
       final String descriptor,
       final boolean isInterface) {
-    super(opcode);
+    super(parent, opcode);
     this.owner = owner;
     this.name = name;
     this.desc = descriptor;
@@ -118,6 +120,23 @@ public class MethodInsnNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    return new MethodInsnNode(opcode, owner, name, desc, itf).cloneAnnotations(this);
+    return new MethodInsnNode(parent, opcode, owner, name, desc, itf).cloneAnnotations(this);
+  }
+
+  @Override
+  public String toString() {
+    Type[] argumentTypes = Type.getArgumentTypes(desc);
+    StringBuilder arguments = new StringBuilder("(");
+
+    if(argumentTypes.length > 0) {
+      arguments.append(argumentTypes[0].getClassName());
+
+      for(int i = 1; i < argumentTypes.length; i++) {
+        arguments.append(", ").append(argumentTypes[i].getClassName());
+      }
+    }
+    arguments.append(")");
+
+    return super.toString() + " " + Type.getReturnType(desc).getClassName() + " " + owner + "." + name + arguments;
   }
 }

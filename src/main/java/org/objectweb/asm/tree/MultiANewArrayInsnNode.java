@@ -30,6 +30,7 @@ package org.objectweb.asm.tree;
 import java.util.Map;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * A node that represents a MULTIANEWARRAY instruction.
@@ -50,8 +51,8 @@ public class MultiANewArrayInsnNode extends AbstractInsnNode {
    * @param descriptor an array type descriptor (see {@link org.objectweb.asm.Type}).
    * @param numDimensions the number of dimensions of the array to allocate.
    */
-  public MultiANewArrayInsnNode(final String descriptor, final int numDimensions) {
-    super(Opcodes.MULTIANEWARRAY);
+  public MultiANewArrayInsnNode(final MethodNode parent, final String descriptor, final int numDimensions) {
+    super(parent, Opcodes.MULTIANEWARRAY);
     this.desc = descriptor;
     this.dims = numDimensions;
   }
@@ -69,6 +70,21 @@ public class MultiANewArrayInsnNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    return new MultiANewArrayInsnNode(desc, dims).cloneAnnotations(this);
+    return new MultiANewArrayInsnNode(parent, desc, dims).cloneAnnotations(this);
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + " " + Type.getType(desc).getClassName() + generateArrayBrackets();
+  }
+
+  private String generateArrayBrackets() {
+    StringBuilder builder = new StringBuilder();
+
+    for(int i = 0; i < dims; i++) {
+      builder.append("[]");
+    }
+
+    return builder.toString();
   }
 }

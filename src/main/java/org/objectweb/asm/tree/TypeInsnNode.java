@@ -52,8 +52,8 @@ public class TypeInsnNode extends AbstractInsnNode {
    * @param descriptor the operand of the instruction to be constructed. This operand is an internal
    *     name (see {@link org.objectweb.asm.Type}).
    */
-  public TypeInsnNode(final int opcode, final String descriptor) {
-    super(opcode);
+  public TypeInsnNode(final MethodNode parent, final int opcode, final String descriptor) {
+    super(parent, opcode);
     this.desc = descriptor;
   }
 
@@ -80,6 +80,11 @@ public class TypeInsnNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    return new TypeInsnNode(opcode, desc).cloneAnnotations(this);
+    return new TypeInsnNode(parent, opcode, desc).cloneAnnotations(this);
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + " " + desc;
   }
 }

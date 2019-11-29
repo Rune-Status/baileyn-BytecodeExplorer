@@ -49,8 +49,8 @@ public class VarInsnNode extends AbstractInsnNode {
    * @param var the operand of the instruction to be constructed. This operand is the index of a
    *     local variable.
    */
-  public VarInsnNode(final int opcode, final int var) {
-    super(opcode);
+  public VarInsnNode(final MethodNode parent, final int opcode, final int var) {
+    super(parent, opcode);
     this.var = var;
   }
 
@@ -77,6 +77,11 @@ public class VarInsnNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    return new VarInsnNode(opcode, var).cloneAnnotations(this);
+    return new VarInsnNode(parent, opcode, var).cloneAnnotations(this);
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + " " + index;
   }
 }

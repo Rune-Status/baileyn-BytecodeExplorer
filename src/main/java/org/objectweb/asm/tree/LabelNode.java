@@ -36,12 +36,12 @@ public class LabelNode extends AbstractInsnNode {
 
   private Label value;
 
-  public LabelNode() {
-    super(-1);
+  public LabelNode(final MethodNode parent) {
+    super(parent, -1);
   }
 
-  public LabelNode(final Label label) {
-    super(-1);
+  public LabelNode(final MethodNode parent, final Label label) {
+    super(parent, -1);
     this.value = label;
   }
 
@@ -75,5 +75,10 @@ public class LabelNode extends AbstractInsnNode {
 
   public void resetLabel() {
     value = null;
+  }
+
+  @Override
+  public String toString() {
+    return getLabel().toString();
   }
 }

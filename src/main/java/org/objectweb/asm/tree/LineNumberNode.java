@@ -51,8 +51,8 @@ public class LineNumberNode extends AbstractInsnNode {
    *     compiled.
    * @param start the first instruction corresponding to this line number.
    */
-  public LineNumberNode(final int line, final LabelNode start) {
-    super(-1);
+  public LineNumberNode(final MethodNode parent, final int line, final LabelNode start) {
+    super(parent, -1);
     this.line = line;
     this.start = start;
   }
@@ -69,6 +69,11 @@ public class LineNumberNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    return new LineNumberNode(line, clone(start, clonedLabels));
+    return new LineNumberNode(parent, line, clone(start, clonedLabels));
+  }
+
+  @Override
+  public String toString() {
+    return "Line Number " + line;
   }
 }

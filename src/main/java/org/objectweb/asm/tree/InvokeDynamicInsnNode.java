@@ -63,11 +63,12 @@ public class InvokeDynamicInsnNode extends AbstractInsnNode {
    *     content of the array so a caller should expect that this array may change.
    */
   public InvokeDynamicInsnNode(
+      final MethodNode parent,
       final String name,
       final String descriptor,
       final Handle bootstrapMethodHandle,
       final Object... bootstrapMethodArguments) { // NOPMD(ArrayIsStoredDirectly): public field.
-    super(Opcodes.INVOKEDYNAMIC);
+    super(parent, Opcodes.INVOKEDYNAMIC);
     this.name = name;
     this.desc = descriptor;
     this.bsm = bootstrapMethodHandle;
@@ -87,6 +88,6 @@ public class InvokeDynamicInsnNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    return new InvokeDynamicInsnNode(name, desc, bsm, bsmArgs).cloneAnnotations(this);
+    return new InvokeDynamicInsnNode(parent, name, desc, bsm, bsmArgs).cloneAnnotations(this);
   }
 }

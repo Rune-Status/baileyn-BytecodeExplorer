@@ -53,8 +53,8 @@ public class JumpInsnNode extends AbstractInsnNode {
    * @param label the operand of the instruction to be constructed. This operand is a label that
    *     designates the instruction to which the jump instruction may jump.
    */
-  public JumpInsnNode(final int opcode, final LabelNode label) {
-    super(opcode);
+  public JumpInsnNode(final MethodNode parent, final int opcode, final LabelNode label) {
+    super(parent, opcode);
     this.label = label;
   }
 
@@ -82,6 +82,11 @@ public class JumpInsnNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    return new JumpInsnNode(opcode, clone(label, clonedLabels)).cloneAnnotations(this);
+    return new JumpInsnNode(parent, opcode, clone(label, clonedLabels)).cloneAnnotations(this);
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + " " + label.toString();
   }
 }

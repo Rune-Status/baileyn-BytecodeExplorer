@@ -28,7 +28,9 @@
 package org.objectweb.asm.tree;
 
 import java.util.Map;
+
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 /**
  * A node that represents a field instruction. A field instruction is an instruction that loads or
@@ -61,8 +63,8 @@ public class FieldInsnNode extends AbstractInsnNode {
    * @param descriptor the field's descriptor (see {@link org.objectweb.asm.Type}).
    */
   public FieldInsnNode(
-      final int opcode, final String owner, final String name, final String descriptor) {
-    super(opcode);
+          final MethodNode parent, final int opcode, final String owner, final String name, final String descriptor) {
+    super(parent, opcode);
     this.owner = owner;
     this.name = name;
     this.desc = descriptor;
@@ -91,6 +93,11 @@ public class FieldInsnNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    return new FieldInsnNode(opcode, owner, name, desc).cloneAnnotations(this);
+    return new FieldInsnNode(parent, opcode, owner, name, desc).cloneAnnotations(this);
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + " " + Type.getType(desc) + " " + owner + "." + name;
   }
 }

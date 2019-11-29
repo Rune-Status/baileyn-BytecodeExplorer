@@ -57,8 +57,8 @@ public class LookupSwitchInsnNode extends AbstractInsnNode {
    * @param labels beginnings of the handler blocks. {@code labels[i]} is the beginning of the
    *     handler block for the {@code keys[i]} key.
    */
-  public LookupSwitchInsnNode(final LabelNode dflt, final int[] keys, final LabelNode[] labels) {
-    super(Opcodes.LOOKUPSWITCH);
+  public LookupSwitchInsnNode(final MethodNode parent, final LabelNode dflt, final int[] keys, final LabelNode[] labels) {
+    super(parent, Opcodes.LOOKUPSWITCH);
     this.dflt = dflt;
     this.keys = Util.asArrayList(keys);
     this.labels = Util.asArrayList(labels);
@@ -86,8 +86,13 @@ public class LookupSwitchInsnNode extends AbstractInsnNode {
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
     LookupSwitchInsnNode clone =
-        new LookupSwitchInsnNode(clone(dflt, clonedLabels), null, clone(labels, clonedLabels));
+        new LookupSwitchInsnNode(parent, clone(dflt, clonedLabels), null, clone(labels, clonedLabels));
     clone.keys.addAll(keys);
     return clone.cloneAnnotations(this);
+  }
+
+  @Override
+  public String toString() {
+    return super.toString();
   }
 }

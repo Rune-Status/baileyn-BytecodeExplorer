@@ -47,8 +47,8 @@ public class IntInsnNode extends AbstractInsnNode {
    *     SIPUSH or NEWARRAY.
    * @param operand the operand of the instruction to be constructed.
    */
-  public IntInsnNode(final int opcode, final int operand) {
-    super(opcode);
+  public IntInsnNode(final MethodNode parent, final int opcode, final int operand) {
+    super(parent, opcode);
     this.operand = operand;
   }
 
@@ -74,6 +74,11 @@ public class IntInsnNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    return new IntInsnNode(opcode, operand).cloneAnnotations(this);
+    return new IntInsnNode(parent, opcode, operand).cloneAnnotations(this);
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + " " + operand;
   }
 }

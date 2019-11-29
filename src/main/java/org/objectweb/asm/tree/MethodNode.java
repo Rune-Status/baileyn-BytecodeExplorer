@@ -334,6 +334,7 @@ public class MethodNode extends MethodVisitor {
       final Object[] stack) {
     instructions.add(
         new FrameNode(
+            this,
             type,
             numLocal,
             local == null ? null : getLabelNodes(local),
@@ -343,28 +344,28 @@ public class MethodNode extends MethodVisitor {
 
   @Override
   public void visitInsn(final int opcode) {
-    instructions.add(new InsnNode(opcode));
+    instructions.add(new InsnNode(this, opcode));
   }
 
   @Override
   public void visitIntInsn(final int opcode, final int operand) {
-    instructions.add(new IntInsnNode(opcode, operand));
+    instructions.add(new IntInsnNode(this, opcode, operand));
   }
 
   @Override
   public void visitVarInsn(final int opcode, final int var) {
-    instructions.add(new VarInsnNode(opcode, var));
+    instructions.add(new VarInsnNode(this, opcode, var));
   }
 
   @Override
   public void visitTypeInsn(final int opcode, final String type) {
-    instructions.add(new TypeInsnNode(opcode, type));
+    instructions.add(new TypeInsnNode(this, opcode, type));
   }
 
   @Override
   public void visitFieldInsn(
       final int opcode, final String owner, final String name, final String descriptor) {
-    instructions.add(new FieldInsnNode(opcode, owner, name, descriptor));
+    instructions.add(new FieldInsnNode(this, opcode, owner, name, descriptor));
   }
 
   @Override
@@ -381,7 +382,7 @@ public class MethodNode extends MethodVisitor {
     }
     int opcode = opcodeAndSource & ~Opcodes.SOURCE_MASK;
 
-    instructions.add(new MethodInsnNode(opcode, owner, name, descriptor, isInterface));
+    instructions.add(new MethodInsnNode(this, opcode, owner, name, descriptor, isInterface));
   }
 
   @Override
@@ -392,12 +393,12 @@ public class MethodNode extends MethodVisitor {
       final Object... bootstrapMethodArguments) {
     instructions.add(
         new InvokeDynamicInsnNode(
-            name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments));
+            this, name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments));
   }
 
   @Override
   public void visitJumpInsn(final int opcode, final Label label) {
-    instructions.add(new JumpInsnNode(opcode, getLabelNode(label)));
+    instructions.add(new JumpInsnNode(this, opcode, getLabelNode(label)));
   }
 
   @Override
@@ -407,28 +408,28 @@ public class MethodNode extends MethodVisitor {
 
   @Override
   public void visitLdcInsn(final Object value) {
-    instructions.add(new LdcInsnNode(value));
+    instructions.add(new LdcInsnNode(this, value));
   }
 
   @Override
   public void visitIincInsn(final int var, final int increment) {
-    instructions.add(new IincInsnNode(var, increment));
+    instructions.add(new IincInsnNode(this, var, increment));
   }
 
   @Override
   public void visitTableSwitchInsn(
       final int min, final int max, final Label dflt, final Label... labels) {
-    instructions.add(new TableSwitchInsnNode(min, max, getLabelNode(dflt), getLabelNodes(labels)));
+    instructions.add(new TableSwitchInsnNode(this, min, max, getLabelNode(dflt), getLabelNodes(labels)));
   }
 
   @Override
   public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
-    instructions.add(new LookupSwitchInsnNode(getLabelNode(dflt), keys, getLabelNodes(labels)));
+    instructions.add(new LookupSwitchInsnNode(this, getLabelNode(dflt), keys, getLabelNodes(labels)));
   }
 
   @Override
   public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
-    instructions.add(new MultiANewArrayInsnNode(descriptor, numDimensions));
+    instructions.add(new MultiANewArrayInsnNode(this, descriptor, numDimensions));
   }
 
   @Override
@@ -512,7 +513,7 @@ public class MethodNode extends MethodVisitor {
 
   @Override
   public void visitLineNumber(final int line, final Label start) {
-    instructions.add(new LineNumberNode(line, getLabelNode(start)));
+    instructions.add(new LineNumberNode(this, line, getLabelNode(start)));
   }
 
   @Override
@@ -536,7 +537,7 @@ public class MethodNode extends MethodVisitor {
    */
   protected LabelNode getLabelNode(final Label label) {
     if (!(label.info instanceof LabelNode)) {
-      label.info = new LabelNode();
+      label.info = new LabelNode(this);
     }
     return (LabelNode) label.info;
   }

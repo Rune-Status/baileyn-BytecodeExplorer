@@ -69,8 +69,8 @@ public class FrameNode extends AbstractInsnNode {
    */
   public List<Object> stack;
 
-  private FrameNode() {
-    super(-1);
+  private FrameNode(final MethodNode parent) {
+    super(parent, -1);
   }
 
   /**
@@ -89,12 +89,13 @@ public class FrameNode extends AbstractInsnNode {
    *     uninitialized types respectively - see {@link MethodVisitor}).
    */
   public FrameNode(
+      final MethodNode parent,
       final int type,
       final int numLocal,
       final Object[] local,
       final int numStack,
       final Object[] stack) {
-    super(-1);
+    super(parent, -1);
     this.type = type;
     switch (type) {
       case Opcodes.F_NEW:
@@ -149,7 +150,7 @@ public class FrameNode extends AbstractInsnNode {
 
   @Override
   public AbstractInsnNode clone(final Map<LabelNode, LabelNode> clonedLabels) {
-    FrameNode clone = new FrameNode();
+    FrameNode clone = new FrameNode(parent);
     clone.type = type;
     if (local != null) {
       clone.local = new ArrayList<>();
@@ -184,5 +185,10 @@ public class FrameNode extends AbstractInsnNode {
       array[i] = o;
     }
     return array;
+  }
+
+  @Override
+  public String toString() {
+    return "Frame";
   }
 }
