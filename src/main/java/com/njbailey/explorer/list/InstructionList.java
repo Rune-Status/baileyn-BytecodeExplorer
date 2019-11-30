@@ -4,6 +4,7 @@ import javafx.scene.control.ListView;
 import lombok.Getter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
 
 public class InstructionList extends ListView<AbstractInsnNode> {
     @Getter
@@ -24,5 +25,9 @@ public class InstructionList extends ListView<AbstractInsnNode> {
         for(AbstractInsnNode instruction : method.getInstructions()) {
             getItems().add(instruction);
         }
+    }
+
+    public void highlightTryCatchBlock(TryCatchBlockNode tryCatchBlock) {
+
     }
 }

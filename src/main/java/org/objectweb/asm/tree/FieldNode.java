@@ -30,6 +30,7 @@ package org.objectweb.asm.tree;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
@@ -43,6 +44,7 @@ import org.objectweb.asm.TypePath;
  * @author Eric Bruneton
  */
 @Getter
+@Setter
 public class FieldNode extends FieldVisitor {
 
   /**
@@ -247,5 +249,10 @@ public class FieldNode extends FieldVisitor {
       }
     }
     fieldVisitor.visitEnd();
+  }
+
+  public void setName(String name) {
+    getParent().getApplication().renameFieldReferences(this, name);
+    this.name = name;
   }
 }

@@ -485,6 +485,7 @@ public class InsnList implements Iterable<AbstractInsnNode> {
           if(methodInsnNode.desc.equals(toRename.getDesc())) {
             if(methodInsnNode.owner.equals(toRename.getParent().getName())) {
               methodInsnNode.name = newName;
+              methodInsnNode.fireUpdateEvent();
             }
           }
         }
@@ -501,6 +502,7 @@ public class InsnList implements Iterable<AbstractInsnNode> {
           if(fieldInsnNode.desc.equals(toRename.getDesc())) {
             if(fieldInsnNode.owner.equals(toRename.getParent().getName())) {
               fieldInsnNode.name = newName;
+              fieldInsnNode.fireUpdateEvent();
             }
           }
         }
@@ -515,12 +517,14 @@ public class InsnList implements Iterable<AbstractInsnNode> {
 
         if(fieldInsnNode.getOwner().equals(toRename.getName())) {
           fieldInsnNode.setOwner(newName);
+          fieldInsnNode.fireUpdateEvent();
         }
       } else if(node instanceof MethodInsnNode) {
         MethodInsnNode methodInsnNode = (MethodInsnNode) node;
 
         if(methodInsnNode.getOwner().equals(toRename.getName())) {
           methodInsnNode.setOwner(newName);
+          methodInsnNode.fireUpdateEvent();
         }
       }
     }

@@ -272,4 +272,12 @@ public abstract class AbstractInsnNode {
   public String toString() {
     return OpcodeInfo.OPCODE_NAMES[getOpcode()].toUpperCase();
   }
+
+  public void fireUpdateEvent() {
+    if(updated != null) {
+      updated.run();
+    }
+  }
+
+  public Runnable updated;
 }

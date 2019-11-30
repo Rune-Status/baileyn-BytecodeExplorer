@@ -11,6 +11,7 @@ public class MethodTreeItem extends SimpleTreeItem<MethodNode> {
     public MethodTreeItem(MethodNode method) {
         super(method);
         setValue(method.getName());
+        setEditable(true);
     }
 
     @Override
@@ -25,5 +26,10 @@ public class MethodTreeItem extends SimpleTreeItem<MethodNode> {
         });
 
         return new ContextMenu(menu);
+    }
+
+    @Override
+    public void commitEdit(String value) {
+        getData().setName(value);
     }
 }

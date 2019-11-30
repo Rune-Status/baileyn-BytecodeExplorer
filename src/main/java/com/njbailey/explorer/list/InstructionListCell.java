@@ -4,7 +4,7 @@ import javafx.scene.control.ListCell;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 
-public class InstructionListCell extends ListCell<AbstractInsnNode> {
+public class InstructionListCell extends ListCell<AbstractInsnNode> implements Runnable {
     @Override
     protected void updateItem(AbstractInsnNode item, boolean empty) {
         super.updateItem(item, empty);
@@ -13,6 +13,7 @@ public class InstructionListCell extends ListCell<AbstractInsnNode> {
             setText(null);
             setGraphic(null);
         } else {
+            item.updated = this;
             if(item instanceof LabelNode) {
                 setText(item.toString() + ":");
             } else {
@@ -22,5 +23,10 @@ public class InstructionListCell extends ListCell<AbstractInsnNode> {
 
             setGraphic(null);
         }
+    }
+
+    @Override
+    public void run() {
+        updateItem(getItem(), isEmpty());
     }
 }

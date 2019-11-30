@@ -77,16 +77,18 @@ public class MainController implements Initializable {
             }
         });
 
+        applicationTree.setEditable(true);
         applicationTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         applicationTree.setCellFactory(e -> new TreeCellImpl());
-        applicationTree.setOnMouseClicked(mouseEvent -> {
-            if(mouseEvent.getClickCount() == 2) {
-                Object selectedValue = applicationTree.getSelectionModel().getSelectedItem();
-
-                if(selectedValue instanceof MethodTreeItem) {
-                    selectOrAddMethod(((MethodTreeItem) selectedValue).getData());
-                }
+        applicationTree.getSelectionModel().selectedItemProperty().addListener((a, oldValue, newValue) -> {
+            if(newValue instanceof MethodTreeItem) {
+                selectOrAddMethod(((MethodTreeItem) newValue).getData());
             }
+        });
+
+        applicationTree.setOnEditCommit(e -> {
+            SimpleTreeItem treeItem = (SimpleTreeItem) e.getTreeItem();
+            treeItem.commitEdit(e.getNewValue());
         });
 
         applicationTree.setRoot(rootItem);

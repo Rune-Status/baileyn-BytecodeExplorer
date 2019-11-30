@@ -9,6 +9,7 @@ public class ClassFileTreeItem extends SimpleTreeItem<ClassNode> {
     public ClassFileTreeItem(ClassNode classFile) {
         super(classFile);
         setValue(classFile.getName());
+        setEditable(true);
 
         if(Modifier.isAbstract(classFile.getAccess())) {
             setGraphic(new Label("[A]"));
@@ -17,5 +18,10 @@ public class ClassFileTreeItem extends SimpleTreeItem<ClassNode> {
         } else {
             setGraphic(new Label("[C]"));
         }
+    }
+
+    @Override
+    public void commitEdit(String value) {
+        getData().setName(value);
     }
 }
