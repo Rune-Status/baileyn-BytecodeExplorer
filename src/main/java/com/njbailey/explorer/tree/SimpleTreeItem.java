@@ -1,7 +1,5 @@
 package com.njbailey.explorer.tree;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -133,6 +133,30 @@ public class InsnList implements Iterable<AbstractInsnNode> {
     return insnNode.index;
   }
 
+  public boolean isInsnProtectedByTryCatch(TryCatchBlockNode tryCatchBlockNode, AbstractInsnNode insnNode) {
+    AbstractInsnNode current = tryCatchBlockNode.start;
+
+    while(current != tryCatchBlockNode.end) {
+      if(current == insnNode) {
+        return true;
+      }
+
+      current = current.getNext();
+    }
+
+    return false;
+  }
+
+  public AbstractInsnNode getNextExecutableInstruction(AbstractInsnNode insnNode) {
+    AbstractInsnNode current = insnNode.getNext();
+
+    while(current.getOpcode() < 0) {
+      current = current.getNext();
+    }
+
+    return current;
+  }
+
   /**
    * Makes the given visitor visit all the instructions in this list.
    *
