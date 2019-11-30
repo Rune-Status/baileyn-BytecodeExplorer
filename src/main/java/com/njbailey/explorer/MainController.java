@@ -1,5 +1,6 @@
 package com.njbailey.explorer;
 
+import com.njbailey.explorer.controls.MethodPanel;
 import com.njbailey.explorer.list.InstructionList;
 import com.njbailey.explorer.tree.*;
 import javafx.event.ActionEvent;
@@ -88,7 +89,7 @@ public class MainController implements Initializable {
         });
 
         applicationTree.setOnEditCommit(e -> {
-            SimpleTreeItem treeItem = (SimpleTreeItem) e.getTreeItem();
+            SimpleTreeItem<?> treeItem = (SimpleTreeItem<?>) e.getTreeItem();
             treeItem.commitEdit(e.getNewValue());
         });
 
@@ -99,17 +100,17 @@ public class MainController implements Initializable {
 
     private void selectOrAddMethod(MethodNode method) {
         for(Tab tab : methodTabs.getTabs()) {
-            if(tab.getContent() instanceof InstructionList) {
-                InstructionList instructionList = (InstructionList) tab.getContent();
+            if(tab.getContent() instanceof MethodPanel) {
+                MethodPanel methodPanel = (MethodPanel) tab.getContent();
 
-                if(instructionList.getMethod().equals(method)) {
+                if(methodPanel.getMethodNode().equals(method)) {
                     methodTabs.getSelectionModel().select(tab);
                     return;
                 }
             }
         }
 
-        Tab tab = new Tab(method.getName(), new InstructionList(method));
+        Tab tab = new Tab(method.getName(), new MethodPanel(method));
         methodTabs.getTabs().add(tab);
         methodTabs.getSelectionModel().select(tab);
     }

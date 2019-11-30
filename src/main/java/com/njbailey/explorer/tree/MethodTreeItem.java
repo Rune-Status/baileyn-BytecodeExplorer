@@ -1,7 +1,6 @@
 package com.njbailey.explorer.tree;
 
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeView;
 import org.objectweb.asm.tree.MethodNode;
 

@@ -61,7 +61,6 @@ public class ApplicationNode {
                 jarOutputStream.putNextEntry(entry);
 
                 ClassWriter writer = new ClassWriter(0);
-                // TODO: Make ClassFile accept class visitors.
                 classNode.accept(writer);
 
                 jarOutputStream.write(writer.toByteArray());
