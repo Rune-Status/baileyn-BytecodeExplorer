@@ -1,15 +1,17 @@
 package com.njbailey.explorer.tree;
 
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TreeView;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.lang.reflect.Modifier;
 
 public class ClassFileTreeItem extends SimpleTreeItem<ClassNode> {
-    public ClassFileTreeItem(ClassNode classFile) {
-        super(classFile);
+    public ClassFileTreeItem(TreeView<String> treeView, ClassNode classFile) {
+        super(treeView, classFile);
         setValue(classFile.getName());
-        setEditable(true);
 
         if(Modifier.isAbstract(classFile.getAccess())) {
             setGraphic(new Label("[A]"));
@@ -21,7 +23,12 @@ public class ClassFileTreeItem extends SimpleTreeItem<ClassNode> {
     }
 
     @Override
-    public void commitEdit(String value) {
+    protected void populateContextMenu(ContextMenu contextMenu) {
+        contextMenu.getItems().addAll(createRenameMenu());
+    }
+
+    @Override
+    protected void internalCommitEdit(String value) {
         getData().setName(value);
     }
 }

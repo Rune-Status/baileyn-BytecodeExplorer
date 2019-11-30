@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.objectweb.asm.tree.ApplicationNode;
@@ -77,12 +78,12 @@ public class MainController implements Initializable {
             }
         });
 
-        applicationTree.setEditable(true);
         applicationTree.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         applicationTree.setCellFactory(e -> new TreeCellImpl());
-        applicationTree.getSelectionModel().selectedItemProperty().addListener((a, oldValue, newValue) -> {
-            if(newValue instanceof MethodTreeItem) {
-                selectOrAddMethod(((MethodTreeItem) newValue).getData());
+
+        applicationTree.getSelectionModel().selectedItemProperty().addListener((e, old, selectedValue) -> {
+            if(selectedValue instanceof MethodTreeItem) {
+                selectOrAddMethod(((MethodTreeItem) selectedValue).getData());
             }
         });
 
@@ -114,15 +115,15 @@ public class MainController implements Initializable {
     }
 
     private void updateApplication(ApplicationNode application) {
-        JavaApplicationTreeItem applicationTreeItem = new JavaApplicationTreeItem(application);
+        JavaApplicationTreeItem applicationTreeItem = new JavaApplicationTreeItem(applicationTree, application);
         for(ClassNode classNode : application.getClasses()) {
-            SimpleTreeItem<String> fieldItems = new SimpleTreeItem<>("Fields");
-            classNode.getFields().forEach(field -> fieldItems.getChildren().add(new FieldTreeItem(field)));
+            SimpleTreeItem<String> fieldItems = new SimpleTreeItem<>(applicationTree, "Fields");
+            classNode.getFields().forEach(field -> fieldItems.getChildren().add(new FieldTreeItem(applicationTree, field)));
 
-            SimpleTreeItem<String> methodItems = new SimpleTreeItem<>("Methods");
-            classNode.getMethods().forEach(method -> methodItems.getChildren().add(new MethodTreeItem(method)));
+            SimpleTreeItem<String> methodItems = new SimpleTreeItem<>(applicationTree, "Methods");
+            classNode.getMethods().forEach(method -> methodItems.getChildren().add(new MethodTreeItem(applicationTree, method)));
 
-            ClassFileTreeItem classFileTreeItem = new ClassFileTreeItem(classNode);
+            ClassFileTreeItem classFileTreeItem = new ClassFileTreeItem(applicationTree, classNode);
             classFileTreeItem.getChildren().add(fieldItems);
             classFileTreeItem.getChildren().add(methodItems);
 

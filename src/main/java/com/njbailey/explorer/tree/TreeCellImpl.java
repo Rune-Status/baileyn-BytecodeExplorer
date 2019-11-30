@@ -1,7 +1,6 @@
 package com.njbailey.explorer.tree;
 
 import javafx.scene.control.cell.TextFieldTreeCell;
-import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 
 public class TreeCellImpl extends TextFieldTreeCell<String> {
@@ -18,8 +17,6 @@ public class TreeCellImpl extends TextFieldTreeCell<String> {
             setText(getItem() == null ? "" : getItem());
             setGraphic(getTreeItem().getGraphic());
             setContextMenu(treeItem.getContextMenu());
-            setEditable(treeItem.isEditable());
-
             setConverter(new DefaultStringConverter());
         }
     }

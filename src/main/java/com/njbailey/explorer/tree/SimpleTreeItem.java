@@ -2,35 +2,55 @@ package com.njbailey.explorer.tree;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class SimpleTreeItem<T> extends TreeItem<String> {
+    private ContextMenu contextMenu = new ContextMenu();
+    private TreeView<String> treeView;
+
+    @Getter
+    @Setter
     private T data;
-    private boolean editable = false;
 
-    public SimpleTreeItem(T data) {
+    public SimpleTreeItem(TreeView<String> treeView, T data) {
+        this.treeView = treeView;
         this.data = data;
+
         setValue(data.toString());
+        populateContextMenu(contextMenu);
     }
 
-    public ContextMenu getContextMenu() {
-        return null;
+    public final ContextMenu getContextMenu() {
+        return contextMenu;
     }
 
-    protected void setEditable(boolean editable) {
-        this.editable = editable;
+    public final void commitEdit(String value) {
+        internalCommitEdit(value);
+        getTreeView().setEditable(false);
     }
 
-    public boolean isEditable() {
-        return editable;
+    protected void internalCommitEdit(String value) {}
+    protected void populateContextMenu(ContextMenu contextMenu) {}
+
+    protected TreeView<String> getTreeView() {
+        return treeView;
     }
 
-    public void commitEdit(String value) {
+    protected void startEditing() {
+        getTreeView().setEditable(true);
+        getTreeView().edit(this);
+    }
 
+    protected MenuItem createRenameMenu() {
+        return createRenameMenu("Rename...");
+    }
+
+    protected MenuItem createRenameMenu(String name) {
+        MenuItem menuItem = new MenuItem(name);
+        menuItem.setOnAction(e -> startEditing());
+
+        return menuItem;
     }
 }
