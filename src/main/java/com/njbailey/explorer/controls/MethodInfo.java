@@ -1,5 +1,6 @@
 package com.njbailey.explorer.controls;
 
+import com.njbailey.explorer.list.ExceptionListPanel;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -8,10 +9,8 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import javafx.scene.paint.Color;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
@@ -28,8 +27,13 @@ public class MethodInfo extends VBox {
         setSpacing(10.0);
 
         Node basicInfo = createBasicInfo();
+        Node exceptionList = createThrownExceptionInfo();
         Node modifierInfo = createModifierInfo();
-        getChildren().addAll(basicInfo, modifierInfo);
+        getChildren().addAll(
+                basicInfo,
+                exceptionList,
+                modifierInfo
+        );
     }
 
     private Node createBasicInfo() {
@@ -102,13 +106,16 @@ public class MethodInfo extends VBox {
                 argumentTypesLabel, argumentTypesValueLabel
         );
 
-        return gridPane;
+        return new TitledPane("Basic Information", gridPane);
+    }
+
+    private Node createThrownExceptionInfo() {
+        ExceptionListPanel exceptionListPanel = new ExceptionListPanel(method.getExceptions());
+
+        return new TitledPane("Exceptions", exceptionListPanel);
     }
 
     private Node createModifierInfo() {
-        TitledPane titledPane = new TitledPane();
-        titledPane.setText("Modifiers");
-
         FlowPane flowPane = new FlowPane();
 
         flowPane.setHgap(15.0);
@@ -130,10 +137,8 @@ public class MethodInfo extends VBox {
                 createCheckBox("Strict", Modifier.isStrict(access), "Declared strictfp; floating-point mode is FP-strict."),
                 createCheckBox("Synthetic", (access & Opcodes.ACC_SYNTHETIC) != 0, "Declared synthetic; not present in the source code.")
         );
-        
-        titledPane.setContent(flowPane);
 
-        return titledPane;
+        return new TitledPane("Modifiers", flowPane);
     }
 
     private CheckBox createCheckBox(String text, boolean defaultValue, String description) {
