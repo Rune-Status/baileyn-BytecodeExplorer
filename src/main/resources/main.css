@@ -38,3 +38,7 @@
 .error-text {
     -fx-text-fill: red;
 }
+
+.deprecated-text .text {
+    -fx-strikethrough: true;
+}

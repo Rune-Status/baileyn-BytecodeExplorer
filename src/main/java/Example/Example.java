@@ -9,6 +9,11 @@ public class Example {
         System.out.println("Stuff");
     }
 
+    @Deprecated
+    private void deprecatedExample() {
+
+    }
+
     private void exceptionExample() {
         try {
             int i = 13;    

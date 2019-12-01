@@ -1,5 +1,6 @@
 package com.njbailey.explorer.controls;
 
+import com.njbailey.explorer.list.AnnotationListPanel;
 import com.njbailey.explorer.list.ExceptionListPanel;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -27,9 +28,11 @@ public class MethodInfo extends VBox {
 
         Node basicInfo = createBasicInfo();
         Node exceptionList = createThrownExceptionInfo();
+        Node annotationList = createAnnotationInfo();
         getChildren().addAll(
                 basicInfo,
-                exceptionList
+                exceptionList,
+                annotationList
         );
     }
 
@@ -40,6 +43,11 @@ public class MethodInfo extends VBox {
 
         Label nameLabel = new Label("Name:");
         Label nameValueLabel = new Label(method.getName());
+
+        if(method.isDeprecated()) {
+            nameValueLabel.getStyleClass().add("deprecated-text");
+        }
+
         GridPane.setConstraints(nameLabel, 0, 0);
         GridPane.setConstraints(nameValueLabel, 1, 0);
 
@@ -119,6 +127,12 @@ public class MethodInfo extends VBox {
         ExceptionListPanel exceptionListPanel = new ExceptionListPanel(method.getExceptions());
 
         return new TitledPane("Exceptions", exceptionListPanel);
+    }
+
+    private Node createAnnotationInfo() {
+        AnnotationListPanel annotationListPanel = new AnnotationListPanel(method);
+
+        return new TitledPane("Visible Annotations", annotationListPanel);
     }
 
     private Node createModifierInfo() {
