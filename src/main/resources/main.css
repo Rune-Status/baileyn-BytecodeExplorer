@@ -34,3 +34,7 @@
 .selected {
     -fx-border-color: red;
 }
+
+.error-text {
+    -fx-text-fill: red;
+}
