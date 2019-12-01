@@ -44,7 +44,7 @@ cd BytecodeExplorer
 
 ## Screenshots
 ### The information currently displayed for a method:
-![Current Method Information](https://bytecode-explorer.s3.us-east-2.amazonaws.com/function-view.png)
+![Current Method Information](https://bytecode-explorer.s3.us-east-2.amazonaws.com/function-view-2.png)
 
 ### The instructions for a method:
 ![Current Method Instructions](https://bytecode-explorer.s3.us-east-2.amazonaws.com/instruction-view.png)
