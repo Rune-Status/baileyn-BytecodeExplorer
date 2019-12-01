@@ -1,7 +1,7 @@
 # BytecodeExplorer
 
 ## About
-Bytecode Explorer is meant to be a tool for analyzing the bytecode for Java applications. My goal is to implement most of the features I love from IDA Pro for binary file analysis. 
+Bytecode Explorer is meant to be a tool for analyzing the bytecode of Java applications. My goal is to implement most of the features I love from IDA Pro for binary file analysis. 
 
 ***NOTE:*** This is currently in the VERY beginning stages. Anything and everything will most-probably change.
 
