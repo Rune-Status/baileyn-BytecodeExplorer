@@ -26,6 +26,10 @@ public class AnnotationListPanel extends VBox {
         getChildren().addAll(annotationListView);
     }
 
+    public boolean isEmpty() {
+        return annotationListView.getItems().isEmpty();
+    }
+
     private Node createToolBar() {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_RIGHT);

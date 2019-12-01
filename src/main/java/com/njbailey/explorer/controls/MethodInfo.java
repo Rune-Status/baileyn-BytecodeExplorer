@@ -1,6 +1,7 @@
 package com.njbailey.explorer.controls;
 
 import com.njbailey.explorer.list.AnnotationListPanel;
+import com.njbailey.explorer.list.AttributeListPanel;
 import com.njbailey.explorer.list.ExceptionListPanel;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -29,10 +30,12 @@ public class MethodInfo extends VBox {
         Node basicInfo = createBasicInfo();
         Node exceptionList = createThrownExceptionInfo();
         Node annotationList = createAnnotationInfo();
+        Node attributeList = createAttributeInfo();
         getChildren().addAll(
                 basicInfo,
                 exceptionList,
-                annotationList
+                annotationList,
+                attributeList
         );
     }
 
@@ -126,13 +129,25 @@ public class MethodInfo extends VBox {
     private Node createThrownExceptionInfo() {
         ExceptionListPanel exceptionListPanel = new ExceptionListPanel(method.getExceptions());
 
-        return new TitledPane("Exceptions", exceptionListPanel);
+        TitledPane titledPane = new TitledPane("Exceptions", exceptionListPanel);
+
+        if(exceptionListPanel.isEmpty()) {
+            titledPane.setExpanded(false);
+        }
+
+        return titledPane;
     }
 
     private Node createAnnotationInfo() {
         AnnotationListPanel annotationListPanel = new AnnotationListPanel(method);
 
-        return new TitledPane("Visible Annotations", annotationListPanel);
+        TitledPane titledPane = new TitledPane("Visible Annotations", annotationListPanel);
+
+        if(annotationListPanel.isEmpty()) {
+            titledPane.setExpanded(false);
+        }
+
+        return titledPane;
     }
 
     private Node createModifierInfo() {
@@ -165,6 +180,17 @@ public class MethodInfo extends VBox {
         );
 
         return gridPane;
+    }
+
+    private Node createAttributeInfo() {
+        AttributeListPanel attributeListPanel = new AttributeListPanel(method.getAttrs());
+        TitledPane titledPane = new TitledPane("Attributes", attributeListPanel);
+
+        if(attributeListPanel.isEmpty()) {
+            titledPane.setExpanded(false);
+        }
+
+        return titledPane;
     }
 
     private CheckBox createCheckBox(String text, boolean defaultValue, String description) {

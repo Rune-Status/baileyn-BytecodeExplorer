@@ -2,6 +2,7 @@ package com.njbailey.explorer.controls;
 
 import com.njbailey.explorer.list.InstructionList;
 
+import javafx.scene.control.ScrollPane;
 import org.objectweb.asm.tree.MethodNode;
 
 import javafx.event.ActionEvent;
@@ -20,6 +21,8 @@ public class MethodPanel extends BorderPane {
     private InstructionList instructionList;
     private MethodInfo methodInfo;
 
+    private ScrollPane methodInfoPane;
+
     public MethodPanel(MethodNode methodNode) {
         this.methodNode = methodNode;
     
@@ -31,6 +34,9 @@ public class MethodPanel extends BorderPane {
     private void setupComponents() {
         instructionList = new InstructionList(methodNode);
         methodInfo = new MethodInfo(methodNode);
+
+        methodInfoPane = new ScrollPane(methodInfo);
+        methodInfoPane.setFitToWidth(true);
     }
 
     private void setupToolbar() {
@@ -41,7 +47,7 @@ public class MethodPanel extends BorderPane {
 
         Button btnMethodInfo = new Button("Method Info");
         btnMethodInfo.setOnAction(e -> {
-            setCenter(methodInfo);
+            setCenter(methodInfoPane);
         });
 
         toolBar.getItems().addAll(btnMethodInfo, btnInsnList);

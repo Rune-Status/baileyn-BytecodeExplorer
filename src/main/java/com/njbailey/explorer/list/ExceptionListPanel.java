@@ -4,7 +4,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -21,6 +20,10 @@ public class ExceptionListPanel extends VBox {
         exceptionList.getItems().addAll(exceptions);
 
         getChildren().addAll(exceptionList, toolBar);
+    }
+
+    public boolean isEmpty() {
+        return exceptionList.getItems().isEmpty();
     }
 
     private Node createToolBar() {

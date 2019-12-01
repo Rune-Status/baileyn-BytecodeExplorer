@@ -124,6 +124,14 @@ public class MainController implements Initializable {
             SimpleTreeItem<String> methodItems = new SimpleTreeItem<>(applicationTree, "Methods");
             classNode.getMethods().forEach(method -> methodItems.getChildren().add(new MethodTreeItem(applicationTree, method)));
 
+            classNode.getMethods().forEach(method -> {
+                if(method.getAttrs() != null) {
+                    if(method.getAttrs().size() > 0) {
+                        System.out.println(classNode.name + "." + method.getName());
+                    }
+                }
+            });
+
             ClassFileTreeItem classFileTreeItem = new ClassFileTreeItem(applicationTree, classNode);
             classFileTreeItem.getChildren().add(fieldItems);
             classFileTreeItem.getChildren().add(methodItems);
