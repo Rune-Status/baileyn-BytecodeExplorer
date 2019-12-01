@@ -28,6 +28,8 @@
 package org.objectweb.asm.tree;
 
 import java.util.Map;
+import java.util.Optional;
+
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
@@ -83,9 +85,10 @@ public class VarInsnNode extends AbstractInsnNode {
 
   @Override
   public String toString() {
-    if(parent.localVariables.size() > var) {
-      LocalVariableNode localVariableNode = parent.localVariables.get(var);
-      return super.toString() + " " + Type.getType(localVariableNode.desc).getClassName() + " " + localVariableNode.name;
+    Optional<LocalVariableNode> optionalLocalVariableNode = parent.getLocalVariableForVar(var);
+    if(optionalLocalVariableNode.isPresent()) {
+      LocalVariableNode localVariableNode = optionalLocalVariableNode.get();
+      return super.toString() + " " + var + "// " + Type.getType(localVariableNode.desc).getClassName() + " " + localVariableNode.name;
     } else {
       return super.toString() + " " + var;
     }

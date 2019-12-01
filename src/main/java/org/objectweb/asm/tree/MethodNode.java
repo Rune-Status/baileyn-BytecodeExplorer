@@ -29,6 +29,7 @@ package org.objectweb.asm.tree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import lombok.Getter;
 import org.objectweb.asm.AnnotationVisitor;
@@ -814,6 +815,18 @@ public class MethodNode extends MethodVisitor {
     }
 
     return deprecated;
+  }
+
+  public Optional<LocalVariableNode> getLocalVariableForVar(int var) {
+    if(localVariables != null) {
+      for (LocalVariableNode localVariableNode : localVariables) {
+        if(localVariableNode.index == var) {
+          return Optional.of(localVariableNode);
+        }
+      }
+    }
+
+    return Optional.empty();
   }
 
   @Override

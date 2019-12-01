@@ -123,4 +123,8 @@ public class TryCatchBlockNode {
       }
     }
   }
+
+  public boolean isInstructionProtected(AbstractInsnNode insnNode) {
+    return insnNode.index >= start.index && insnNode.index <= end.index;
+  }
 }

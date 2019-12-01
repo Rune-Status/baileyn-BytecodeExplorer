@@ -43,11 +43,8 @@ public class InstructionListCell extends ListCell<AbstractInsnNode> implements R
             }
 
             for(TryCatchBlockNode tryCatchBlock : tryCatchBlocks) {
-                if(tryCatchBlock.start == item) {
-                    setText("try { // " + item.toString());
-                    break;
-                } else if(tryCatchBlock.handler == item) {
-                    setText("} catch(" + tryCatchBlock.type + ") { //" + item.toString());
+                if(tryCatchBlock.isInstructionProtected(item)) {
+                    setText(getText() + " // Handled by " +  tryCatchBlock.handler);
                 }
             }
 
