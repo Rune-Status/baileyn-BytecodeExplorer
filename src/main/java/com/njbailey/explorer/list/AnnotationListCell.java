@@ -10,11 +10,13 @@ import java.util.Arrays;
 
 public class AnnotationListCell extends TextFieldListCell<AnnotationNode> {
     private ListView<AnnotationNode> annotationList;
+    private boolean visible;
 
-    public AnnotationListCell(ListView<AnnotationNode> annotationList) {
+    public AnnotationListCell(ListView<AnnotationNode> annotationList, boolean visible) {
         // TODO: Is it considered hacky to pass the ListView here? I don't know how else to
         //       access it to remove items...
         this.annotationList = annotationList;
+        this.visible = visible;
     }
 
     @Override

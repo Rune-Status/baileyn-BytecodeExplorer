@@ -29,12 +29,15 @@ public class MethodInfo extends VBox {
 
         Node basicInfo = createBasicInfo();
         Node exceptionList = createThrownExceptionInfo();
-        Node annotationList = createAnnotationInfo();
+        Node visibleAnnotationList = createVisibleAnnotationInfo();
+        Node invisibleAnnotationList = createInvisibleAnnotationInfo();
         Node attributeList = createAttributeInfo();
+
         getChildren().addAll(
                 basicInfo,
                 exceptionList,
-                annotationList,
+                visibleAnnotationList,
+                invisibleAnnotationList,
                 attributeList
         );
     }
@@ -138,10 +141,22 @@ public class MethodInfo extends VBox {
         return titledPane;
     }
 
-    private Node createAnnotationInfo() {
-        AnnotationListPanel annotationListPanel = new AnnotationListPanel(method);
+    private Node createVisibleAnnotationInfo() {
+        AnnotationListPanel annotationListPanel = new AnnotationListPanel(method.getVisibleAnnotations(), true);
 
         TitledPane titledPane = new TitledPane("Visible Annotations", annotationListPanel);
+
+        if(annotationListPanel.isEmpty()) {
+            titledPane.setExpanded(false);
+        }
+
+        return titledPane;
+    }
+
+    private Node createInvisibleAnnotationInfo() {
+        AnnotationListPanel annotationListPanel = new AnnotationListPanel(method.getInvisibleAnnotations(), false);
+
+        TitledPane titledPane = new TitledPane("Invisible Annotations", annotationListPanel);
 
         if(annotationListPanel.isEmpty()) {
             titledPane.setExpanded(false);

@@ -14,13 +14,13 @@ import java.util.List;
 public class AnnotationListPanel extends VBox {
     private ListView<AnnotationNode> annotationListView = new ListView<>();
 
-    public AnnotationListPanel(MethodNode method) {
+    public AnnotationListPanel(List<AnnotationNode> annotations, boolean visible) {
         Node toolBar = createToolBar();
 
-        annotationListView.setCellFactory(ignored -> new AnnotationListCell(annotationListView));
+        annotationListView.setCellFactory(ignored -> new AnnotationListCell(annotationListView, visible));
 
-        if(method.getVisibleAnnotations() != null) {
-            annotationListView.getItems().addAll(method.getVisibleAnnotations());
+        if(annotations != null) {
+            annotationListView.getItems().addAll(annotations);
         }
 
         getChildren().addAll(annotationListView);
