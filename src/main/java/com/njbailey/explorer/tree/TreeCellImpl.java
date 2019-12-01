@@ -18,6 +18,14 @@ public class TreeCellImpl extends TextFieldTreeCell<String> {
             setGraphic(getTreeItem().getGraphic());
             setContextMenu(treeItem.getContextMenu());
             setConverter(new DefaultStringConverter());
+
+            if(treeItem instanceof MethodTreeItem) {
+                MethodTreeItem methodTreeItem = (MethodTreeItem) treeItem;
+
+                if(methodTreeItem.getData().isDeprecated()) {
+                    getStyleClass().add("deprecated-text");
+                }
+            }
         }
     }
 }

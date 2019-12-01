@@ -152,6 +152,8 @@ public class MethodNode extends MethodVisitor {
   /** Whether the accept method has been called on this object. */
   private boolean visited;
 
+  private Boolean deprecated = null;
+
   /**
    * Constructs an uninitialized {@link MethodNode}. <i>Subclasses must not use this
    * constructor</i>. Instead, they must use the {@link #MethodNode(int, ClassNode)} version.
@@ -795,6 +797,23 @@ public class MethodNode extends MethodVisitor {
 
   public void renameReferences(ClassNode toRename, String newName) {
     instructions.renameReferences(toRename, newName);
+  }
+
+  public boolean isDeprecated() {
+    if(deprecated == null) {
+      deprecated = false;
+
+      if(visibleAnnotations != null) {
+        for (AnnotationNode annotationNode : visibleAnnotations) {
+          if (annotationNode.desc.equals("Ljava/lang/Deprecated;")) {
+            deprecated = true;
+            return true;
+          }
+        }
+      }
+    }
+
+    return deprecated;
   }
 
   @Override

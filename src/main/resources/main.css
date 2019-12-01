@@ -34,3 +34,11 @@
 .selected {
     -fx-border-color: red;
 }
+
+.error-text {
+    -fx-text-fill: red;
+}
+
+.deprecated-text .text {
+    -fx-strikethrough: true;
+}
