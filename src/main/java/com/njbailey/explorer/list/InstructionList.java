@@ -34,6 +34,7 @@ public class InstructionList extends ListView<AbstractInsnNode> {
     public void setMethod(MethodNode method) {
         this.method = method;
 
+        getItems().clear();
         for(AbstractInsnNode instruction : method.getInstructions()) {
             if(instruction instanceof LabelNode || instruction.getOpcode() >= 0) {
                 getItems().add(instruction);
