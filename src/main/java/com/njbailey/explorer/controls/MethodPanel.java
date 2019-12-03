@@ -41,9 +41,15 @@ public class MethodPanel extends BorderPane {
     private void setDefaultView() {
         VBox vbox = new VBox();
 
+        TitledPane methodInfoTitledPane = new TitledPane("Method Information", methodInfoPane);
+        TitledPane tryCatchInfoTitledPane = new TitledPane("Try-Catch Information", tryCatchInfo);
+
+        methodInfoTitledPane.setExpanded(false);
+        tryCatchInfoTitledPane.setExpanded(false);
+
         vbox.getChildren().addAll(
-                new TitledPane("Method Information", methodInfoPane),
-                new TitledPane("Try-Catch Information", tryCatchInfo)
+                methodInfoTitledPane,
+                tryCatchInfoTitledPane
         );
 
         setLeft(vbox);

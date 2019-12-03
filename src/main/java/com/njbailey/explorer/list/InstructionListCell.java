@@ -1,5 +1,6 @@
 package com.njbailey.explorer.list;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -15,9 +16,8 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
-public class InstructionListCell extends ListCell<AbstractInsnNode> implements Runnable {
+public class InstructionListCell extends ListCell<AbstractInsnNodeWrapper> implements Runnable {
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final Map<TryCatchBlockNode, Color> COLOR_MAP = new HashMap<>();
     private InsnList instructions;
     private List<TryCatchBlockNode> tryCatchBlocks;
 
@@ -27,37 +27,32 @@ public class InstructionListCell extends ListCell<AbstractInsnNode> implements R
     }
 
     @Override
-    protected void updateItem(AbstractInsnNode item, boolean empty) {
+    protected void updateItem(AbstractInsnNodeWrapper item, boolean empty) {
         super.updateItem(item, empty);
 
         if(empty || item == null) {
             setText(null);
             setGraphic(null);
         } else {
-            item.updated = this;
-            if(item instanceof LabelNode) {
-                setText(item.toString() + ":");
+            AbstractInsnNode insnNode = item.getInsnNode();
+            insnNode.updated = this;
+            if(insnNode instanceof LabelNode) {
+                setText(insnNode.toString() + ":");
             } else {
-                setText(item.toString());
+                setText(insnNode.toString());
                 getStyleClass().add("indent");
             }
 
-            for(TryCatchBlockNode tryCatchBlock : tryCatchBlocks) {
-                if(tryCatchBlock.isInstructionProtected(item)) {
-                    setText(getText() + " // Handled by " +  tryCatchBlock.handler);
-                }
-            }
-
             setGraphic(null);
+
+            item.highlightedProperty().addListener((a, old, newValue) -> {
+                if(newValue) {
+                    setGraphic(new Label("T"));
+                } else {
+                    setGraphic(null);
+                }
+            });
         }
-    }
-
-    private static Color generateRandomColor() {
-        float red = RANDOM.nextFloat();
-        float green = RANDOM.nextFloat();
-        float blue = RANDOM.nextFloat();
-
-        return new Color(red, green, blue, 1.0);
     }
 
     @Override

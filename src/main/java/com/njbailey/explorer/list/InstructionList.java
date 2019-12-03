@@ -8,7 +8,7 @@ import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class InstructionList extends ListView<AbstractInsnNode> {
+public class InstructionList extends ListView<AbstractInsnNodeWrapper> {
     @Getter
     private MethodNode method;
 
@@ -21,11 +21,11 @@ public class InstructionList extends ListView<AbstractInsnNode> {
         setCellFactory(ignored -> new InstructionListCell(method));
         setOnKeyPressed(e -> {
             if(e.getCode() == KeyCode.ENTER) {
-                AbstractInsnNode selectedNode = getSelectionModel().getSelectedItem();
+                AbstractInsnNode selectedNode = getSelectionModel().getSelectedItem().getInsnNode();
 
                 if(selectedNode instanceof JumpInsnNode) {
                     JumpInsnNode jumpInsnNode = (JumpInsnNode) selectedNode;
-                    getSelectionModel().select(method.getInstructions().getNextExecutableInstruction(jumpInsnNode.label));
+                    select(method.getInstructions().getNextExecutableInstruction(jumpInsnNode.label));
                 }
             }
         });
@@ -37,7 +37,16 @@ public class InstructionList extends ListView<AbstractInsnNode> {
         getItems().clear();
         for(AbstractInsnNode instruction : method.getInstructions()) {
             if(instruction instanceof LabelNode || instruction.getOpcode() >= 0) {
-                getItems().add(instruction);
+                getItems().add(new AbstractInsnNodeWrapper(instruction));
+            }
+        }
+    }
+
+    private void select(AbstractInsnNode insnNode) {
+        for(AbstractInsnNodeWrapper wrapper : getItems()) {
+            if(wrapper.getInsnNode() == insnNode) {
+                getSelectionModel().select(wrapper);
+                return;
             }
         }
     }
