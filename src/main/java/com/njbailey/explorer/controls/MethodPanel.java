@@ -4,6 +4,7 @@ import com.njbailey.explorer.list.InstructionList;
 
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import org.objectweb.asm.tree.MethodNode;
 
 import javafx.event.ActionEvent;
@@ -38,12 +39,14 @@ public class MethodPanel extends BorderPane {
     }
 
     private void setDefaultView() {
-        SplitPane infoSplitPane = new SplitPane();
-        infoSplitPane.setOrientation(Orientation.VERTICAL);
+        VBox vbox = new VBox();
 
-        infoSplitPane.getItems().addAll(methodInfoPane, tryCatchInfo);
+        vbox.getChildren().addAll(
+                new TitledPane("Method Information", methodInfoPane),
+                new TitledPane("Try-Catch Information", tryCatchInfo)
+        );
 
-        setLeft(infoSplitPane);
+        setLeft(vbox);
         setCenter(instructionList);
     }
 }
