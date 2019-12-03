@@ -28,6 +28,9 @@
 package org.objectweb.asm.tree;
 
 import java.util.List;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.objectweb.asm.MethodVisitor;
 
 /**
@@ -35,6 +38,8 @@ import org.objectweb.asm.MethodVisitor;
  *
  * @author Eric Bruneton
  */
+@Getter
+@Setter
 public class TryCatchBlockNode {
 
   /** The beginning of the exception handler's scope (inclusive). */
