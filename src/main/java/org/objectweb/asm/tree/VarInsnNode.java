@@ -86,11 +86,8 @@ public class VarInsnNode extends AbstractInsnNode {
   @Override
   public String toString() {
     Optional<LocalVariableNode> optionalLocalVariableNode = parent.getLocalVariableForVar(var);
-    if(optionalLocalVariableNode.isPresent()) {
-      LocalVariableNode localVariableNode = optionalLocalVariableNode.get();
-      return super.toString() + " " + var + "// " + Type.getType(localVariableNode.desc).getClassName() + " " + localVariableNode.name;
-    } else {
-      return super.toString() + " " + var;
-    }
+    return super.toString() + " " + var +
+            optionalLocalVariableNode.map(localVariableNode -> " // " + Type.getType(localVariableNode.desc).getClassName() + " " + localVariableNode.name)
+            .orElse("");
   }
 }
