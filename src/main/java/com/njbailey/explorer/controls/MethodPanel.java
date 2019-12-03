@@ -2,32 +2,29 @@ package com.njbailey.explorer.controls;
 
 import com.njbailey.explorer.list.InstructionList;
 
-import javafx.scene.control.ScrollPane;
+import javafx.geometry.Orientation;
+import javafx.scene.control.*;
 import org.objectweb.asm.tree.MethodNode;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import lombok.Getter;
 
 public class MethodPanel extends BorderPane {
     @Getter
     private MethodNode methodNode;
-    
-    ToolBar toolBar = new ToolBar();
 
     private InstructionList instructionList;
     private MethodInfo methodInfo;
+    private TryCatchInfo tryCatchInfo;
 
     private ScrollPane methodInfoPane;
 
     public MethodPanel(MethodNode methodNode) {
         this.methodNode = methodNode;
-    
+
         setupComponents();
-        setupToolbar();
         setDefaultView();
     }
 
@@ -36,26 +33,17 @@ public class MethodPanel extends BorderPane {
         methodInfo = new MethodInfo(methodNode);
 
         methodInfoPane = new ScrollPane(methodInfo);
-        methodInfoPane.setFitToWidth(true);
-    }
 
-    private void setupToolbar() {
-        Button btnInsnList = new Button("Instructions");
-        btnInsnList.setOnAction(e -> {
-            setCenter(instructionList);
-        });
-
-        Button btnMethodInfo = new Button("Method Info");
-        btnMethodInfo.setOnAction(e -> {
-            setCenter(methodInfoPane);
-        });
-
-        toolBar.getItems().addAll(btnMethodInfo, btnInsnList);
-        setTop(toolBar);
+        tryCatchInfo = new TryCatchInfo(this);
     }
 
     private void setDefaultView() {
-        Node node = toolBar.getItems().get(0);
-        node.fireEvent(new ActionEvent());
+        SplitPane infoSplitPane = new SplitPane();
+        infoSplitPane.setOrientation(Orientation.VERTICAL);
+
+        infoSplitPane.getItems().addAll(methodInfoPane, tryCatchInfo);
+
+        setLeft(infoSplitPane);
+        setCenter(instructionList);
     }
 }
